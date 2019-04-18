@@ -5,17 +5,19 @@
     "serve": "vue-cli-service serve"
   },
   "dependencies": {
-    "ky": "^0.9.0",
+    "ky": "^0.9.1",
     "pangu": "^4.0.7",
-    "vue": "^2.6.8",
-    "vue-router": "^3.0.2"
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.6"
   },
   "devDependencies": {
-    "@vue/cli-service": "^3.4.1",
-    "prettier": "^1.16.4",
+    "@vue/cli-service": "^3.6.0",
+    "prettier": "^1.17.0",
+    "pug": "^2.0.3",
+    "pug-plain-loader": "^1.0.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "vue-template-compiler": "^2.6.8"
+    "vue-template-compiler": "^2.6.10"
   },
   "prettier": {
     "semi": false,
