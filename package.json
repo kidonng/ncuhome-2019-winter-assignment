@@ -2,10 +2,12 @@
   "name": "ncuhome-2019-winter-assignment",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "ky": "^0.9.1",
+    "nprogress": "^0.2.0",
     "pangu": "^4.0.7",
     "vue": "^2.6.10",
     "vue-router": "^3.0.6"

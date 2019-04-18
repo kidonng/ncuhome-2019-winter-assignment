@@ -1,41 +1,26 @@
-<template>
-  <div>
-    <article>
-      <h2>行情简报</h2>
-      <div class="columns">
-        <div class="column" v-for="day in brief">
-          <h3>{{ day.date }}</h3>
-          <ul>
-            <li
-              v-for="position in day.dataArray"
-              v-html="
-                pangu(position.content)
-                  .split(position.jobTitle)
-                  .join(`<strong>${position.jobTitle}</strong>`)
-              "
-            ></li>
-          </ul>
-        </div>
-      </div>
-    </article>
+<template lang="pug">
+  div
+    article
+      h2 行情简报
 
-    <article v-for="day in jobs">
-      <h2>{{ day.date }}</h2>
-      <section class="topic" v-for="positions in day.dataArray">
-        <h3
-          @click="
-            e =>
-              e.target.parentElement
-                .querySelector('.collapse')
-                .classList.toggle('show')
-          "
-        >
-          {{ positions.jobTitle | spacing }}
-        </h3>
-        <div class="meta">
-          {{ positions.jobsArray.map(i => i.title).join('、') | spacing }}
-        </div>
-        <div class="summary">
+      .columns: .column(v-for="day in brief")
+        h3 {{ day.date }}
+
+        ul: li(v-for="position in day.dataArray") {{ position | post }}
+
+    article(v-for="day in jobs")
+      h2 {{ day.date }}
+
+      section.topic(v-for="positions in day.dataArray")
+        h3(@click=`
+          e =>
+            e.target.parentElement
+              .querySelector('.collapse')
+              .classList.toggle('show')
+        `) {{ positions.jobTitle | spacing }}
+        .meta {{ positions.jobsArray.map(i => i.title).join('、') | spacing }}
+
+        .summary.
           {{
             `${Object.keys(positions.cities)[0]}、${
               Object.keys(positions.cities)[1]
@@ -45,43 +30,37 @@
               positions.experienceLower
             }-${positions.experienceUpper} 年经验`
           }}
-        </div>
 
-        <div class="collapse">
-          <div v-for="job in positions.jobsArray">
-            <h4>
-              <a :href="job.url" target="_blank">{{ job.title | spacing }}</a>
-              <span class="meta">{{
-                job.sponsor ? `${job.company}（赞助商）` : job.company
-              }}</span>
-            </h4>
+        .collapse: div(v-for="job in positions.jobsArray")
+          h4
+            a(:href="job.url" target="_blank") {{ job.title | spacing }}
+            span.meta.
+              {{
+                job.sponsor
+                  ? `${job.company}（赞助商）`
+                  : job.company
+              }}
 
-            <div class="meta">
-              <span class="salary">{{
+          .meta
+            span.salary.
+              {{
                 job.salaryLower === -1
                   ? '面议'
                   : `${job.salaryLower}-${job.salaryUpper}k`
-              }}</span>
-              <span class="experience">{{
+              }}
+            span.experience.
+              {{
                 job.experienceLower === -1
                   ? '经验不限'
                   : job.experienceUpper === -1
                   ? `${job.experienceLower} 年以上`
                   : `${job.experienceLower}-${job.experienceUpper} 年`
-              }}</span>
-              <span>{{ job.city }}</span>
-              <span class="site">{{ job.siteName }}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-    </article>
-  </div>
+              }}
+            span {{ job.city }}
+            span.site {{ job.siteName }}
 </template>
 
 <script>
-import pangu from 'pangu'
-
 export default {
   data: () => ({
     jobs: [],
@@ -124,6 +103,7 @@ export default {
     categorize(position, isJobs, i = 0) {
       let time = new Date(isJobs ? position.createdAt : position.date)
       let now = new Date()
+      const target = isJobs ? this.jobs : this.brief
 
       if (isJobs) {
         time.setDate(time.getDate() + 1)
@@ -142,8 +122,6 @@ export default {
             1} 月 ${time.getDate()} 日`
       }
 
-      const target = isJobs ? this.jobs : this.brief
-
       if (!target[i])
         target.push({
           date: time,
@@ -154,13 +132,14 @@ export default {
         i++
         this.categorize(position, isJobs, i)
       }
-    },
-    pangu: t => pangu.spacing(t)
+    }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+@import "../styles/base"
+
 .column h3
   margin-top 0
 
@@ -175,7 +154,7 @@ export default {
   cursor pointer
 
   &:hover
-    color #06c
+    color theme
 
 .summary
   margin-top xxs

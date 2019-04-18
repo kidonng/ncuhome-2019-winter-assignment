@@ -1,18 +1,10 @@
-<template>
-  <div>
-    <article class="topic" v-for="topic in topics">
-      <h2>
-        <router-link :to="{ name: 'topic', params: { id: topic.id } }">
-          {{ topic.title | spacing }}
-        </router-link>
-        <time class="meta">{{ topic.createdAt | format }}</time>
-      </h2>
+<template lang="pug">
+  div: article.topic(v-for="topic in topics")
+    h2
+      router-link(:to="{ name: 'topic', params: { id: topic.id } }") {{ topic.title | spacing }}
+      time.meta {{ topic.createdAt | format }}
 
-      <div class="summary">
-        {{ topic.summary | spacing }}
-      </div>
-    </article>
-  </div>
+    .summary {{ topic.summary | spacing }}
 </template>
 
 <script>
@@ -74,6 +66,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "../styles/base"
+
 .meta
   font-weight initial
   margin-left xxs

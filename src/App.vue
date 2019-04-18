@@ -1,23 +1,21 @@
-<template>
-  <div>
-    <nav>
-      <h1>Readhub</h1>
-      <router-link
+<template lang="pug">
+  div
+    nav
+      h1 Readhub
+      router-link(
         v-for="(title, name, i) in categories"
         :to="{ name }"
         :key="i"
-      >
-        {{ title }}
-      </router-link>
-    </nav>
+      ) {{ title }}
 
-    <router-view></router-view>
-  </div>
+    router-view
 </template>
 
 <style lang="stylus">
+@import "./styles/base"
+@import "./styles/nprogress"
+
 body
-  font-family -apple-system, Noto Sans, Segoe UI, Helvetica Neue, Helvetica, Arial, Liberation Sans, PingFang SC, Hiragino Sans GB, Noto Sans CJK SC, Source Han Sans SC, Source Han Sans CN, Microsoft YaHei, Wenquanyi Micro Hei, WenQuanYi Zen Hei, ST Heiti, SimHei, WenQuanYi Zen Hei Sharp, sans-serif
   line-height 1.5
   margin m auto
   width 90vw
@@ -32,15 +30,18 @@ h1
 
 nav
   display flex
-  font-weight 500
   justify-content space-between
 
   @media (min-width 768px)
     &
       justify-content normal
 
+      h1
+        margin-right l
+
       a
-        margin-left xxl
+        margin-right l
+        margin-left l
 
 h1
   margin 0
@@ -73,7 +74,7 @@ a
 
   &:hover
   &.router-link-active
-    color #06c
+    color theme
 
 strong
   font-weight 500

@@ -1,6 +1,7 @@
-# NCUHome 2019 Winter Assignment
+# Readhub
 
-A [Readhub](https://readhub.cn/) application. **NOT FOR PRODUCTION** due to Readhub API's CORS policy.
+Simple [Readhub](https://readhub.cn/) application, formerly NCUHome 2019 Winter Assignment.
 
 - Setup `npm i`
 - Run `npm run serve`
+- Build `npm run build`

@@ -3,9 +3,18 @@ import router from './plugins/router'
 import App from './App'
 import ky from 'ky'
 import pangu from 'pangu'
+import NProgress from 'nprogress'
 
 Vue.config.productionTip = false
-Vue.prototype.api = ky.extend({ prefixUrl: 'https://api.readhub.cn/' }).get
+NProgress.configure({ showSpinner: false })
+
+Vue.prototype.api = ky.extend({
+  prefixUrl: 'https://api.readhub.cn/',
+  hooks: {
+    beforeRequest: [() => NProgress.start()],
+    afterResponse: [() => NProgress.done()]
+  }
+}).get
 Vue.prototype.categories = {
   topics: '热门',
   news: '科技',
@@ -13,7 +22,14 @@ Vue.prototype.categories = {
   blockchain: '区块',
   jobs: '招聘'
 }
-Vue.filter('spacing', t => pangu.spacing(t))
+
+Vue.filter('spacing', text => pangu.spacing(text))
+Vue.filter('post', post =>
+  pangu
+    .spacing(post.content)
+    .split(post.jobTitle)
+    .join(`“${post.jobTitle}”`)
+)
 Vue.filter('format', time => {
   time = new Date(time)
   let now = new Date()

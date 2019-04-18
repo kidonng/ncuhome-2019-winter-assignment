@@ -1,33 +1,26 @@
-<template>
-  <div>
-    <article class="topic" v-for="entry in news">
-      <h2>
-        <a :href="entry.url" target="_blank">{{ entry.title | spacing }}</a>
-      </h2>
+<template lang="pug">
+  div: article.topic(v-for="entry in news")
+    h2: a(:href="entry.url" target="_blank") {{ entry.title | spacing }}
 
-      <div class="summary" v-if="entry.summary">
-        {{
-          entry.summary.endsWith('，')
-            ? `${entry.summary.substring(0, entry.summary.length - 1)}...`
-            : entry.summary.endsWith('。')
-            ? entry.summary
-            : `${entry.summary}...` | spacing
-        }}
-      </div>
+    .summary(v-if="entry.summary").
+      {{
+        entry.summary.endsWith('，')
+          ? `${entry.summary.substring(0, entry.summary.length - 1)}...`
+          : entry.summary.endsWith('。')
+          ? entry.summary
+          : `${entry.summary}...` | spacing
+      }}
 
-      <div class="meta">
-        {{
-          entry.authorName &&
-          entry.authorName !== '新浪科技' &&
-          entry.authorName !== '新浪科技综合' &&
-          entry.authorName !== 'www.qq.com'
-            ? `${entry.siteName} - ${entry.authorName}`
-            : entry.siteName
-        }}
-        <time>{{ entry.publishDate | format }}</time>
-      </div>
-    </article>
-  </div>
+    .meta.
+      {{
+        entry.authorName &&
+        entry.authorName !== '新浪科技' &&
+        entry.authorName !== '新浪科技综合' &&
+        entry.authorName !== 'www.qq.com'
+          ? `${entry.siteName} - ${entry.authorName}`
+          : entry.siteName
+      }}
+      #[time {{ entry.publishDate | format }}]
 </template>
 
 <script>
@@ -76,6 +69,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "../styles/base"
+
 .summary
   margin-bottom xxs
 
