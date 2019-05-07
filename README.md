@@ -1,6 +1,6 @@
 # Readhub
 
-Simple [Readhub](https://readhub.cn/) application, formerly NCUHome 2019 Winter Assignment.
+Simple [Readhub](https://readhub.cn/) application.
 
 - Setup `npm i`
 - Run `npm run serve`
