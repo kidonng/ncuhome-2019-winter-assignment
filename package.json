@@ -6,7 +6,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "ky": "^0.9.1",
+    "ky": "^0.11.0",
     "nprogress": "^0.2.0",
     "pangu": "^4.0.7",
     "vue": "^2.6.10",
