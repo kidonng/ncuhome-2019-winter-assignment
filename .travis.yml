@@ -1,6 +1,6 @@
 language: node_js
 node_js: 12
-cache: node_modules
+cache: npm
 
 script: npm run build
 
@@ -9,6 +9,6 @@ deploy:
   skip_cleanup: true
   github_token: $token
   keep_history: true
-  local_dir: public
+  local_dir: dist
   on:
     branch: master
