@@ -6,20 +6,20 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "ky": "^0.11.0",
-    "nprogress": "^0.2.0",
-    "pangu": "^4.0.7",
-    "vue": "^2.6.10",
-    "vue-router": "^3.0.6"
+    "ky": "0.11.0",
+    "nprogress": "0.2.0",
+    "pangu": "4.0.7",
+    "vue": "2.6.10",
+    "vue-router": "3.0.6"
   },
   "devDependencies": {
-    "@vue/cli-service": "^3.6.0",
-    "prettier": "^1.17.0",
-    "pug": "^2.0.3",
-    "pug-plain-loader": "^1.0.0",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2",
-    "vue-template-compiler": "^2.6.10"
+    "@vue/cli-service": "3.6.0",
+    "prettier": "1.17.0",
+    "pug": "2.0.3",
+    "pug-plain-loader": "1.0.0",
+    "stylus": "0.54.5",
+    "stylus-loader": "3.0.2",
+    "vue-template-compiler": "2.6.10"
   },
   "prettier": {
     "semi": false,
