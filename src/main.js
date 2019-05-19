@@ -9,7 +9,7 @@ Vue.config.productionTip = false
 NProgress.configure({ showSpinner: false })
 
 Vue.prototype.api = ky.extend({
-  prefixUrl: 'https://api.readhub.cn/',
+  prefixUrl: 'https://readhub.kidonng.me/',
   hooks: {
     beforeRequest: [() => NProgress.start()],
     afterResponse: [() => NProgress.done()]

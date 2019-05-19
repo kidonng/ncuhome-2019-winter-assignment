@@ -21,6 +21,9 @@
     "stylus-loader": "3.0.2",
     "vue-template-compiler": "2.6.10"
   },
+  "vue": {
+    "publicPath": "/readhub/"
+  },
   "prettier": {
     "semi": false,
     "singleQuote": true
