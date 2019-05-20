@@ -2,6 +2,6 @@
 
 Simple [Readhub](https://readhub.cn/) application.
 
-- Setup `npm i`
-- Run `npm run serve`
-- Build `npm run build`
+- Setup `yarn`
+- Run `yarn serve`
+- Build `yarn build`
