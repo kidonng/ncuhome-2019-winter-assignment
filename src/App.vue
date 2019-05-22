@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     nav
-      h1 Readhub
+      h1: a(href="https://github.com/kidonng/readhub" title="查看源代码") Readhub
       router-link(
         v-for="(title, name, i) in categories"
         :to="{ name }"
@@ -36,12 +36,8 @@ nav
     &
       justify-content normal
 
-      h1
-        margin-right l
-
-      a
-        margin-right l
-        margin-left l
+      a:not(:only-child)
+        margin-left m * 2
 
 h1
   margin 0
