@@ -7,6 +7,7 @@
         :to="{ name }"
         :key="i"
       ) {{ title }}
+      a(href="https://github.com/kidonng/readhub") GitHub
 
     router-view
 </template>
