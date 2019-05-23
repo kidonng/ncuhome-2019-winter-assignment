@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    article
+    article(v-if="brief.length")
       h2 行情简报
 
       .columns: .column(v-for="day in brief")
