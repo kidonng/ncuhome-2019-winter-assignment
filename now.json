@@ -6,5 +6,6 @@
     { "src": "^/js/(.*)", "dest": "/js/$1" },
     { "src": "^/css/(.*)", "dest": "/css/$1" },
     { "src": ".*", "dest": "/" }
-  ]
+  ],
+  "alias": "readhub.now.sh"
 }
