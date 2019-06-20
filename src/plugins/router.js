@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Topics from '../views/Topics'
+import galite from 'ga-lite'
 const News = () => import(/* webpackChunkName: 'news' */ '../views/News')
 
 Vue.use(Router)
@@ -51,7 +52,17 @@ let router = new Router({
     y: 0
   })
 })
+
 router.afterEach(to => {
+  if (router.app.GALoaded) {
+    galite('set', 'page', to.fullPath)
+    galite('send', 'pageview')
+  } else {
+    router.app.GALoaded = true
+    galite('create', 'UA-140053908-2', 'auto')
+    galite('send', 'pageview')
+  }
+
   if (router.app.categories[to.name])
     document.title = `Readhub - ${router.app.categories[to.name]}`
 })
