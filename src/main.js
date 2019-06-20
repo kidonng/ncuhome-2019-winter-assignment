@@ -5,7 +5,6 @@ import ky from 'ky'
 import pangu from 'pangu'
 import NProgress from 'nprogress'
 
-Vue.config.productionTip = false
 NProgress.configure({ showSpinner: false })
 
 Vue.prototype.api = ky.extend({
@@ -22,6 +21,7 @@ Vue.prototype.categories = {
   blockchain: '区块',
   jobs: '招聘'
 }
+Vue.prototype.GALoaded = false
 
 Vue.filter('spacing', text => pangu.spacing(text))
 Vue.filter('post', post =>
