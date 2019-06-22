@@ -1,7 +1,12 @@
 <template lang="pug">
   div
     nav
-      h1: a(href="https://github.com/kidonng/readhub" title="查看源代码") Readhub
+      h1: a(
+        href="https://github.com/kidonng/readhub"
+        title="GitHub"
+        target="_blank"
+        rel="noreferrer noopener"
+      ) Readhub
       router-link(
         v-for="(title, name, i) in categories"
         :to="{ name }"
