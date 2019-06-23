@@ -5,14 +5,14 @@
 [![Website](https://img.shields.io/website/https/readhub.now.sh.svg?style=for-the-badge)](https://readhub.now.sh/)
 [![GitHub](https://img.shields.io/github/license/kidonng/readhub.svg?style=for-the-badge)](./LICENSE)
 
-English | [简体中文](README-zh-CN.md)
+[English](README.md) | 简体中文
 
 </div>
 
-Simple [Readhub](https://readhub.cn/) application.
+简洁的 [Readhub](https://readhub.cn/) 应用。
 
-## Development
+## 开发
 
-- Setup `yarn` & `yarn add now --dev`
-- Run `now dev`
-- Build `yarn build`
+- 安装依赖 `yarn` & `yarn add now --dev`
+- 运行 `now dev`
+- 构建 `yarn build`
