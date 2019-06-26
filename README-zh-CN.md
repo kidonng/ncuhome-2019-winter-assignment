@@ -11,6 +11,8 @@
 
 简洁的 [Readhub](https://readhub.cn/) 应用。
 
+![](screenshots/index.png)
+
 ## 开发
 
 - 安装依赖 `yarn` & `yarn add now --dev`
