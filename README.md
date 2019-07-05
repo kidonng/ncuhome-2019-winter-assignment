@@ -11,8 +11,6 @@ English | [简体中文](README-zh-CN.md)
 
 Simple [Readhub](https://readhub.cn/) application.
 
-![](screenshots/index.png)
-
 ## Development
 
 - Setup `yarn` & `yarn add now --dev`
