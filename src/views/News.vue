@@ -1,26 +1,33 @@
-<template lang="pug">
-  div: article.topic(v-for="entry in news")
-    h2: a(:href="entry.url" target="_blank") {{ entry.title | spacing }}
+<template>
+  <div>
+    <article class="topic" v-for="entry in news">
+      <h2>
+        <a :href="entry.url" target="_blank">{{ entry.title | spacing }}</a>
+      </h2>
 
-    .summary(v-if="entry.summary").
-      {{
-        entry.summary.endsWith('，')
+      <div class="summary" v-if="entry.summary">
+        {{
+          entry.summary.endsWith('，')
           ? `${entry.summary.substring(0, entry.summary.length - 1)}...`
           : entry.summary.endsWith('。')
           ? entry.summary
           : `${entry.summary}...` | spacing
-      }}
+        }}
+      </div>
 
-    .meta.
-      {{
-        entry.authorName &&
-        entry.authorName !== '新浪科技' &&
-        entry.authorName !== '新浪科技综合' &&
-        entry.authorName !== 'www.qq.com'
+      <div class="meta">
+        {{
+          entry.authorName &&
+          entry.authorName !== '新浪科技' &&
+          entry.authorName !== '新浪科技综合' &&
+          entry.authorName !== 'www.qq.com'
           ? `${entry.siteName} - ${entry.authorName}`
           : entry.siteName
-      }}
-      #[time {{ entry.publishDate | format }}]
+        }}
+        <time>{{ entry.publishDate | format }}</time>
+      </div>
+    </article>
+  </div>
 </template>
 
 <script>

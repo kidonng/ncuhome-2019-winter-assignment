@@ -1,26 +1,34 @@
-<template lang="pug">
-  div
-    article(v-if="brief.length")
-      h2 行情简报
+<template>
+  <div>
+    <article v-if="brief.length">
+      <h2>行情简报</h2>
+      <div class="columns">
+        <div class="column" v-for="day in brief">
+          <h3>{{ day.date }}</h3>
+          <ul>
+            <li v-for="position in day.dataArray">{{ position | post }}</li>
+          </ul>
+        </div>
+      </div>
+    </article>
 
-      .columns: .column(v-for="day in brief")
-        h3 {{ day.date }}
-
-        ul: li(v-for="position in day.dataArray") {{ position | post }}
-
-    article(v-for="day in jobs")
-      h2 {{ day.date }}
-
-      section.topic(v-for="positions in day.dataArray")
-        h3(@click=`
-          e =>
-            e.target.parentElement
-              .querySelector('.collapse')
-              .classList.toggle('show')
-        `) {{ positions.jobTitle | spacing }}
-        .meta {{ positions.jobsArray.map(i => i.title).join('、') | spacing }}
-
-        .summary.
+    <article v-for="day in jobs">
+      <h2>{{ day.date }}</h2>
+      <section class="topic" v-for="positions in day.dataArray">
+        <h3
+          @click="
+            e =>
+              e.target.parentElement
+                .querySelector('.collapse')
+                .classList.toggle('show')
+          "
+        >
+          {{ positions.jobTitle | spacing }}
+        </h3>
+        <div class="meta">
+          {{ positions.jobsArray.map(i => i.title).join('、') | spacing }}
+        </div>
+        <div class="summary">
           {{
             `${Object.keys(positions.cities)[0]}、${
               Object.keys(positions.cities)[1]
@@ -30,34 +38,38 @@
               positions.experienceLower
             }-${positions.experienceUpper} 年经验`
           }}
+        </div>
 
-        .collapse: div(v-for="job in positions.jobsArray")
-          h4
-            a(:href="job.url" target="_blank") {{ job.title | spacing }}
-            span.meta.
-              {{
-                job.sponsor
-                  ? `${job.company}（赞助商）`
-                  : job.company
-              }}
+        <div class="collapse">
+          <div v-for="job in positions.jobsArray">
+            <h4>
+              <a :href="job.url" target="_blank">{{ job.title | spacing }}</a>
+              <span class="meta">{{
+                job.sponsor ? `${job.company}（赞助商）` : job.company
+              }}</span>
+            </h4>
 
-          .meta
-            span.salary.
-              {{
+            <div class="meta">
+              <span class="salary">{{
                 job.salaryLower === -1
                   ? '面议'
                   : `${job.salaryLower}-${job.salaryUpper}k`
-              }}
-            span.experience.
-              {{
+              }}</span>
+              <span class="experience">{{
                 job.experienceLower === -1
                   ? '经验不限'
                   : job.experienceUpper === -1
                   ? `${job.experienceLower} 年以上`
                   : `${job.experienceLower}-${job.experienceUpper} 年`
-              }}
-            span {{ job.city }}
-            span.site {{ job.siteName }}
+              }}</span>
+              <span>{{ job.city }}</span>
+              <span class="site">{{ job.siteName }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </article>
+  </div>
 </template>
 
 <script>
