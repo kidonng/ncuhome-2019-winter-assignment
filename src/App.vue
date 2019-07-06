@@ -1,19 +1,25 @@
-<template lang="pug">
-  div
-    nav
-      h1: a(
-        href="https://github.com/kidonng/readhub"
-        title="GitHub"
-        target="_blank"
-        rel="noreferrer noopener"
-      ) Readhub
-      router-link(
+<template>
+  <div>
+    <nav>
+      <h1>
+        <a
+          href="https://github.com/kidonng/readhub"
+          title="GitHub"
+          target="_blank"
+          rel="noreferrer noopener"
+          >Readhub</a
+        >
+      </h1>
+      <router-link
         v-for="(title, name, i) in categories"
         :to="{ name }"
         :key="i"
-      ) {{ title }}
+        >{{ title }}</router-link
+      >
+    </nav>
 
-    router-view
+    <router-view />
+  </div>
 </template>
 
 <style lang="stylus">

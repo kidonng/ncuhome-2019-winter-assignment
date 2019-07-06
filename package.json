@@ -2,7 +2,7 @@
   "name": "ncuhome-2019-winter-assignment",
   "private": true,
   "engines": {
-    "node": "10.x"
+    "node": ">=10.x"
   },
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -21,8 +21,6 @@
   "devDependencies": {
     "@vue/cli-service": "3.9.0",
     "prettier": "1.18.2",
-    "pug": "2.0.4",
-    "pug-plain-loader": "1.0.0",
     "stylus": "0.54.5",
     "stylus-loader": "3.0.2",
     "vue-template-compiler": "2.6.10"
