@@ -6,14 +6,7 @@
         <div class="column" v-for="day in brief">
           <h3>{{ day.date }}</h3>
           <ul>
-            <li
-              v-for="position in day.dataArray"
-              v-html="
-                pangu(position.content)
-                  .split(position.jobTitle)
-                  .join(`<strong>${position.jobTitle}</strong>`)
-              "
-            ></li>
+            <li v-for="position in day.dataArray">{{ position | post }}</li>
           </ul>
         </div>
       </div>
