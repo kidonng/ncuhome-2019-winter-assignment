@@ -16,65 +16,65 @@
 </template>
 
 <script>
+import { value, watch, onMounted, onUnmounted } from 'vue-function-api'
+
 export default {
-  data: () => ({
-    topics: null,
-    loading: false,
-    refresher: null
-  }),
-  created() {
-    ;(async () => (this.topics = (await this.api('topic').json()).data))()
+  setup(props, context) {
+    const topics = value([])
 
-    addEventListener('scroll', this.scroll)
+    const observer = new IntersectionObserver(async ([entry]) => {
+      if (entry.isIntersecting) {
+        observer.unobserve(entry.target)
 
-    this.refresher = setInterval(async () => {
-      this.loading = true
+        const { data } = await context.root
+          .ky('/api/topic', {
+            searchParams: { lastCursor: [...topics.value].pop().order }
+          })
+          .json()
 
-      const count = (await this.api('topic/newCount', {
-        searchParams: {
-          latestCursor: this.topics[0].order
-        }
-      }).json()).count
-      if (count)
-        this.topics = (await this.api('topic', {
-          searchParams: {
-            pageSize: count
-          }
-        }).json()).data.concat(this.topics)
+        topics.value = [...topics.value, ...data]
+      }
+    })
 
-      this.loading = false
+    watch(topics, topics => {
+      if (topics.length) {
+        observer.observe(document.querySelector('.topic:last-child'))
+      }
+    })
+
+    // Load new topics every half minute
+    const interval = setInterval(async () => {
+      const { count } = await context.root
+        .ky('/api/topic/newCount', {
+          searchParams: { latestCursor: topics.value[0].order }
+        })
+        .json()
+
+      if (count) {
+        const { data } = await context.root
+          .ky('/api/topic', { searchParams: { pageSize: count } })
+          .json()
+
+        topics.value = [...data, ...topics.value]
+      }
     }, 30000)
-  },
-  beforeDestroy() {
-    removeEventListener('scroll', this.scroll)
-    clearInterval(this.refresher)
-  },
-  methods: {
-    scroll() {
-      if (
-        scrollY + innerHeight + 200 > document.body.clientHeight &&
-        !this.loading
-      )
-        (async () => {
-          this.loading = true
 
-          this.topics = this.topics.concat(
-            (await this.api('topic', {
-              searchParams: {
-                lastCursor: this.topics.slice(-1)[0].order
-              }
-            }).json()).data
-          )
+    onMounted(
+      async () =>
+        (topics.value = (await context.root.ky('/api/topic').json()).data)
+    )
+    onUnmounted(() => {
+      observer.disconnect()
+      window.clearInterval(interval)
+    })
 
-          this.loading = false
-        })()
-    }
+    return { topics }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import "../styles/base"
+@import "../styles/variables.styl"
 
 .meta
   font-weight initial

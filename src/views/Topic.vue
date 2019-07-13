@@ -35,31 +35,27 @@
 </template>
 
 <script>
+import { value, watch } from 'vue-function-api'
 import pangu from 'pangu'
 
 export default {
-  data: () => ({
-    topic: null
-  }),
-  created() {
-    this.load()
-  },
-  watch: {
-    $route: 'load'
-  },
-  methods: {
-    load() {
-      ;(async () => {
-        this.topic = await this.api(`topic/${this.$route.params.id}`).json()
-        document.title = `${pangu.spacing(this.topic.title)} - Readhub`
-      })()
-    }
+  setup(props, context) {
+    const topic = value(null)
+
+    watch('$route', async () => {
+      topic.value = await context.root
+        .ky(`/api/topic/${context.root.$route.params.id}`)
+        .json()
+      document.title = `${pangu.spacing(topic.value.title)} - Readhub`
+    })
+
+    return { topic }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import "../styles/base"
+@import "../styles/variables.styl"
 
 .summary
   margin-top xxs

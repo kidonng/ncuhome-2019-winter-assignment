@@ -1,6 +1,6 @@
 <template>
   <div>
-    <article class="topic" v-for="entry in news">
+    <article class="topic" v-for="entry in topics">
       <h2>
         <a :href="entry.url" target="_blank">{{ entry.title | spacing }}</a>
       </h2>
@@ -8,10 +8,10 @@
       <div class="summary" v-if="entry.summary">
         {{
           entry.summary.endsWith('，')
-          ? `${entry.summary.substring(0, entry.summary.length - 1)}...`
-          : entry.summary.endsWith('。')
-          ? entry.summary
-          : `${entry.summary}...` | spacing
+            ? `${entry.summary.substring(0, entry.summary.length - 1)}...`
+            : entry.summary.endsWith('。')
+            ? entry.summary
+            : `${entry.summary}...` | spacing
         }}
       </div>
 
@@ -21,8 +21,8 @@
           entry.authorName !== '新浪科技' &&
           entry.authorName !== '新浪科技综合' &&
           entry.authorName !== 'www.qq.com'
-          ? `${entry.siteName} - ${entry.authorName}`
-          : entry.siteName
+            ? `${entry.siteName} - ${entry.authorName}`
+            : entry.siteName
         }}
         <time>{{ entry.publishDate | format }}</time>
       </div>
@@ -31,52 +31,50 @@
 </template>
 
 <script>
+import { value, watch, onUnmounted } from 'vue-function-api'
+
 export default {
-  data: () => ({
-    news: null,
-    loading: false
-  }),
-  created() {
-    this.load()
+  setup(props, context) {
+    const topics = value([])
 
-    addEventListener('scroll', this.scroll)
-  },
-  beforeDestroy() {
-    removeEventListener('scroll', this.scroll)
-  },
-  watch: {
-    $route: 'load'
-  },
-  methods: {
-    load() {
-      ;(async () =>
-        (this.news = (await this.api(this.$route.name).json()).data))()
-    },
-    scroll() {
-      if (
-        scrollY + innerHeight + 200 > document.body.clientHeight &&
-        !this.loading
-      )
-        (async () => {
-          this.loading = true
+    const observer = new IntersectionObserver(async ([entry]) => {
+      if (entry.isIntersecting) {
+        observer.unobserve(entry.target)
 
-          this.news = this.news.concat(
-            (await this.api(this.$route.name, {
-              searchParams: {
-                lastCursor: Date.parse(this.news.slice(-1)[0].publishDate)
-              }
-            }).json()).data
-          )
+        const { data } = await context.root
+          .ky(`/api/${context.root.$route.name}`, {
+            searchParams: {
+              lastCursor: Date.parse([...topics.value].pop().publishDate)
+            }
+          })
+          .json()
 
-          this.loading = false
-        })()
-    }
+        topics.value = [...topics.value, ...data]
+      }
+    })
+
+    watch(topics, topics => {
+      if (topics.length) {
+        observer.observe(document.querySelector('.topic:last-child'))
+      }
+    })
+
+    watch('$route', async () => {
+      const { data } = await context.root
+        .ky(`/api/${context.root.$route.name}`)
+        .json()
+      topics.value = data
+    })
+
+    onUnmounted(() => observer.disconnect())
+
+    return { topics }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import "../styles/base"
+@import "../styles/variables.styl"
 
 .summary
   margin-bottom xxs
