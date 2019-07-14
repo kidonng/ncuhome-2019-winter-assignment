@@ -13,6 +13,7 @@
     "nprogress": "0.2.0",
     "pangu": "4.0.7",
     "vue": "2.6.10",
+    "vue-function-api": "^2.0.6",
     "vue-router": "3.0.7"
   },
   "devDependencies": {

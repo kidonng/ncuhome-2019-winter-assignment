@@ -23,8 +23,8 @@
 </template>
 
 <style lang="stylus">
-@import "./styles/base"
-@import "./styles/nprogress"
+@import "./styles/variables.styl"
+@import "~nprogress/nprogress.css"
 
 body
   line-height 1.5
@@ -99,4 +99,11 @@ strong
 .summary
   color #666
   line-height rem(28)
+
+#nprogress
+  .bar
+    background theme
+
+  .peg
+    box-shadow 0 0 10px theme 0 0 5px theme
 </style>

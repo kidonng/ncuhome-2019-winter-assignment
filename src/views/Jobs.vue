@@ -1,20 +1,20 @@
 <template>
   <div>
-    <article v-if="brief.length">
+    <article v-if="Object.keys(brief).length">
       <h2>行情简报</h2>
       <div class="columns">
-        <div class="column" v-for="day in brief">
-          <h3>{{ day.date }}</h3>
+        <div class="column" v-for="(positions, date) in brief">
+          <h3>{{ date }}</h3>
           <ul>
-            <li v-for="position in day.dataArray">{{ position | post }}</li>
+            <li v-for="position in positions">{{ position | post }}</li>
           </ul>
         </div>
       </div>
     </article>
 
-    <article v-for="day in jobs">
-      <h2>{{ day.date }}</h2>
-      <section class="topic" v-for="positions in day.dataArray">
+    <article class="day" v-for="(positionArray, date) in jobs">
+      <h2>{{ date }}</h2>
+      <section class="topic" v-for="positions in positionArray">
         <h3
           @click="
             e =>
@@ -73,49 +73,17 @@
 </template>
 
 <script>
+import { value, watch, onMounted, onUnmounted } from 'vue-function-api'
+
 export default {
-  data: () => ({
-    jobs: [],
-    brief: [],
-    loading: false
-  }),
-  created() {
-    ;(async () => {
-      const jobs = (await this.api('jobs').json()).data
-      jobs.forEach(position => this.categorize(position, true))
+  setup(props, context) {
+    const jobs = value({})
+    const brief = value({})
 
-      const brief = (await this.api('jobs/brief').json()).data
-      brief.forEach(position => this.categorize(position, false))
-    })()
-
-    addEventListener('scroll', this.scroll)
-  },
-  beforeDestroy() {
-    removeEventListener('scroll', this.scroll)
-  },
-  methods: {
-    scroll() {
-      if (
-        scrollY + innerHeight + 200 > document.body.clientHeight &&
-        !this.loading
-      )
-        (async () => {
-          this.loading = true
-          ;(await this.api('jobs', {
-            searchParams: {
-              lastCursor: Date.parse(
-                this.jobs.slice(-1)[0].dataArray.slice(-1)[0].publishDate
-              )
-            }
-          }).json()).data.forEach(position => this.categorize(position, true))
-
-          this.loading = false
-        })()
-    },
-    categorize(position, isJobs, i = 0) {
+    const categorize = (position, isJobs) => {
       let time = new Date(isJobs ? position.createdAt : position.date)
       let now = new Date()
-      const target = isJobs ? this.jobs : this.brief
+      const target = isJobs ? jobs.value : brief.value
 
       if (isJobs) {
         time.setDate(time.getDate() + 1)
@@ -134,23 +102,58 @@ export default {
             1} 月 ${time.getDate()} 日`
       }
 
-      if (!target[i])
-        target.push({
-          date: time,
-          dataArray: []
-        })
-      if (time === target[i].date) target[i].dataArray.push(position)
-      else {
-        i++
-        this.categorize(position, isJobs, i)
+      if (target[time]) target[time].push(position)
+      else context.root.$set(target, time, [position])
+    }
+
+    const observer = new IntersectionObserver(async ([entry]) => {
+      if (entry.isIntersecting) {
+        observer.unobserve(entry.target)
+
+        const { data } = await context.root
+          .ky('/api/jobs', {
+            searchParams: {
+              lastCursor: Date.parse(
+                [...[...Object.values(jobs.value)].pop()].pop().publishDate
+              )
+            }
+          })
+          .json()
+
+        data.forEach(position => categorize(position, true))
       }
+    })
+
+    watch(
+      () => Object.values(jobs.value),
+      values => {
+        if (values.length) {
+          observer.observe(
+            document.querySelector('.day:last-child .topic:last-child')
+          )
+        }
+      }
+    )
+
+    onMounted(async () => {
+      const jobs = (await context.root.ky('/api/jobs').json()).data
+      jobs.forEach(position => categorize(position, true))
+
+      const brief = (await context.root.ky('/api/jobs/brief').json()).data
+      brief.forEach(position => categorize(position, false))
+    })
+    onUnmounted(() => observer.disconnect())
+
+    return {
+      jobs,
+      brief
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import "../styles/base"
+@import "../styles/variables.styl"
 
 .column h3
   margin-top 0
