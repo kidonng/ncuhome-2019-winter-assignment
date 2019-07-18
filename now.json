@@ -2,12 +2,12 @@
   "version": 2,
   "builds": [{ "src": "package.json", "use": "@now/static-build" }],
   "routes": [
-    { "src": "^/api/(.*)", "dest": "https://api.readhub.cn/$1" },
+    { "src": "/api/(.*)", "dest": "https://api.readhub.cn/$1" },
     {
-      "src": "^/(js|css)/.*",
+      "src": "/(js|css)/.*",
       "headers": { "cache-control": "max-age=31536000, immutable" }
     },
-    { "src": "^/(.*js$|sockjs-node/.*)" },
+    { "src": "/(.*js$|sockjs-node/.*)" },
     { "src": ".*", "dest": "/" }
   ],
   "regions": ["hnd1"],
