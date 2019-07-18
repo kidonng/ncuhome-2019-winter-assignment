@@ -17,7 +17,7 @@
     "vue-router": "3.0.7"
   },
   "devDependencies": {
-    "@vue/cli-service": "3.9.2",
+    "@vue/cli-service": "3.9.3",
     "prettier": "1.18.2",
     "stylus": "0.54.5",
     "stylus-loader": "3.0.2",
