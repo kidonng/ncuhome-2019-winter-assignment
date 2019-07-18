@@ -7,7 +7,7 @@
       "src": "/(js|css)/.*",
       "headers": { "cache-control": "max-age=31536000, immutable" }
     },
-    { "src": "/(.*js$|sockjs-node/.*)" },
+    { "handle": "filesystem" },
     { "src": ".*", "dest": "/" }
   ],
   "regions": ["hnd1"],

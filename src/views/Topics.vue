@@ -1,6 +1,6 @@
 <template>
   <div>
-    <article class="topic" v-for="topic in topics">
+    <article class="topic" v-for="topic in topics" ref="topic">
       <h2>
         <router-link :to="{ name: 'topic', params: { id: topic.id } }">
           {{ topic.title | spacing }}
@@ -38,7 +38,7 @@ export default {
 
     watch(topics, topics => {
       if (topics.length) {
-        observer.observe(document.querySelector('.topic:last-child'))
+        observer.observe([...context.refs.topic].pop())
       }
     })
 
