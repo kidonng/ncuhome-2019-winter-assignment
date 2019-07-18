@@ -1,18 +1,14 @@
 <template>
   <div>
-    <article class="topic" v-for="entry in topics">
+    <article class="topic" v-for="entry in topics" ref="topic">
       <h2>
-        <a :href="entry.url" target="_blank">{{ entry.title | spacing }}</a>
+        <a :href="entry.url" target="_blank">
+          {{ entry.title | spacing }}
+        </a>
       </h2>
 
-      <div class="summary" v-if="entry.summary">
-        {{
-          entry.summary.endsWith('，')
-            ? `${entry.summary.substring(0, entry.summary.length - 1)}...`
-            : entry.summary.endsWith('。')
-            ? entry.summary
-            : `${entry.summary}...` | spacing
-        }}
+      <div class="summary" v-if="entry.summaryAuto">
+        {{ entry.summaryAuto | spacing }}
       </div>
 
       <div class="meta">
@@ -55,7 +51,7 @@ export default {
 
     watch(topics, topics => {
       if (topics.length) {
-        observer.observe(document.querySelector('.topic:last-child'))
+        observer.observe([...context.refs.topic].pop())
       }
     })
 
