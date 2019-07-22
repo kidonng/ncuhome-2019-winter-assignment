@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Topics from '../views/Topics'
 import galite from 'ga-lite'
 const News = () => import(/* webpackChunkName: 'news' */ '../views/News')
 
@@ -13,7 +12,7 @@ let router = new Router({
     {
       name: 'topics',
       path: '/topics',
-      component: Topics
+      component: () => import(/* webpackChunkName: 'topics' */ '../views/Topics')
     },
     {
       name: 'topic',
