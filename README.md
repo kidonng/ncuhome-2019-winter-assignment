@@ -2,12 +2,14 @@
 
 <div align="center">
 
-[![Website](https://img.shields.io/website/https/readhub.now.sh.svg?style=for-the-badge)](https://readhub.now.sh/)
-[![GitHub](https://img.shields.io/github/license/kidonng/readhub.svg?style=for-the-badge)](./LICENSE)
+[![Website status](https://img.shields.io/website/https/readhub.now.sh.svg?style=for-the-badge)](https://readhub.now.sh/)
+[![License](https://img.shields.io/github/license/kidonng/readhub.svg?style=for-the-badge)](LICENSE)
 
 </div>
 
-Simple [Readhub](https://readhub.cn/) application.
+**DISCLAIMER** This project is for demonstration use only. Any content's copyright belongs to their owner.
+
+Minimal [Readhub](https://readhub.cn/) emulator.
 
 ## Development
 

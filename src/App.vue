@@ -7,31 +7,38 @@
           title="GitHub"
           target="_blank"
           rel="noreferrer noopener"
-          >Readhub</a
         >
+          Readhub
+        </a>
       </h1>
       <router-link
-        v-for="(title, name, i) in categories"
+        v-for="(title, name) in categories"
         :to="{ name }"
-        :key="i"
-        >{{ title }}</router-link
+        :key="name"
       >
+        {{ title }}
+      </router-link>
     </nav>
 
     <router-view />
   </div>
 </template>
 
-<style lang="stylus">
-@import "./styles/variables.styl"
-@import "~nprogress/nprogress.css"
+<script>
+import categories from './categories'
 
+export default {
+  setup: () => ({ categories })
+}
+</script>
+
+<style lang="stylus">
 body
   line-height 1.5
   margin m auto
   width 90vw
 
-  @media (min-width 768px)
+  @media (min-width: 768px)
     &
       width 50vw
 
@@ -43,7 +50,7 @@ nav
   display flex
   justify-content space-between
 
-  @media (min-width 768px)
+  @media (min-width: 768px)
     &
       justify-content normal
 
@@ -99,6 +106,7 @@ strong
 .summary
   color #666
   line-height rem(28)
+  word-break break-word
 
 #nprogress
   .bar

@@ -1,24 +1,41 @@
 <template>
   <div>
-    <article v-if="Object.keys(brief).length">
+    <article v-if="brief.length">
       <h2>行情简报</h2>
       <div class="columns">
-        <div class="column" v-for="(positions, date) in brief">
+        <div class="column" v-for="{ date, positions } in brief" :key="date">
           <h3>{{ date }}</h3>
           <ul>
-            <li v-for="position in positions">
-              {{ position | post }}
-            </li>
+            <li
+              v-for="(position, i) in positions"
+              :key="i"
+              v-html="highlight(position)"
+            />
           </ul>
         </div>
       </div>
     </article>
 
-    <article class="day" v-for="(positionArray, date) in jobs">
+    <article class="day" v-for="{ date, positions } in jobs" :key="date">
       <h2>{{ date }}</h2>
-      <section class="topic" v-for="positions in positionArray" ref="topic">
+      <section
+        class="topic"
+        v-for="({
+          jobTitle,
+          jobsArray,
+          cities,
+          jobCount,
+          salaryLower,
+          salaryUpper,
+          experienceLower,
+          experienceUpper
+        },
+        i) in positions"
+        :key="i"
+        ref="topic"
+      >
         <h3 @click="e => e.target.closest('.topic').classList.toggle('expand')">
-          {{ normalize(positions.jobTitle) | spacing }}
+          {{ jobTitle | spacing }}
           <svg class="expand-icon" viewBox="0 0 24 24">
             <path
               d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
@@ -26,47 +43,55 @@
           </svg>
         </h3>
         <div class="meta">
-          {{
-            positions.jobsArray.map(i => normalize(i.title)).join('・')
-              | spacing
-          }}
+          {{ jobsArray.map(job => job.title).join('・') | spacing }}
         </div>
         <div class="summary">
-          {{ Object.keys(positions.cities)[0] }}、{{
-            Object.keys(positions.cities)[1]
-          }}等地共更新了 {{ positions.jobCount }} 个职位，待遇集中在
-          {{ positions.salaryLower }}-{{ positions.salaryUpper }}k，一般要求
-          {{ positions.experienceLower }}-{{ positions.experienceUpper }} 年经验
+          {{ Object.keys(cities)[0] }}、{{ Object.keys(cities)[1] }}等地共更新了
+          {{ jobCount }} 个职位，待遇集中在 {{ salaryLower }}-{{
+            salaryUpper
+          }}k，一般要求 {{ experienceLower }}-{{ experienceUpper }} 年经验
         </div>
 
         <div class="collapse">
-          <div v-for="job in positions.jobsArray">
+          <div
+            v-for="{
+              url,
+              title,
+              sponsor,
+              company,
+              salaryLower,
+              salaryUpper,
+              experienceLower,
+              experienceUpper,
+              city,
+              siteName
+            } in jobsArray"
+            :key="url"
+          >
             <h4>
-              <a :href="job.url" target="_blank">{{
-                normalize(job.title) | spacing
-              }}</a>
+              <a :href="url" target="_blank" rel="noreferrer noopener">
+                {{ title | spacing }}
+              </a>
               <span class="meta">
-                {{ job.sponsor ? `${job.company}（赞助商）` : job.company }}
+                {{ sponsor ? `${company}（赞助商）` : company }}
               </span>
             </h4>
 
             <div class="meta">
               <span class="salary">{{
-                job.salaryLower <= 0
-                  ? '面议'
-                  : `${job.salaryLower}-${job.salaryUpper}k`
+                salaryLower <= 0 ? '面议' : `${salaryLower}-${salaryUpper}k`
               }}</span>
               <span class="experience">
                 {{
-                  job.experienceLower === -1
+                  experienceLower === -1
                     ? '经验不限'
-                    : job.experienceUpper === -1
-                    ? `${job.experienceLower} 年以上`
-                    : `${job.experienceLower}-${job.experienceUpper} 年`
+                    : experienceUpper === -1
+                    ? `${experienceLower} 年以上`
+                    : `${experienceLower}-${experienceUpper} 年`
                 }}
               </span>
-              <span>{{ job.city }}</span>
-              <span class="site">{{ job.siteName }}</span>
+              <span>{{ city }}</span>
+              <span class="site">{{ siteName }}</span>
             </div>
           </div>
         </div>
@@ -76,113 +101,41 @@
 </template>
 
 <script>
-import { value, watch, onMounted, onUnmounted } from 'vue-function-api'
+import { value, onMounted } from 'vue-function-api'
+import pangu from 'pangu'
+import api from '../utils/api'
+import infiniteScroll from '../utils/infiniteScroll'
 
 export default {
-  setup(props, context) {
-    const jobs = value({})
-    const brief = value({})
-
-    const categorize = (position, isJobs) => {
-      let time = new Date(isJobs ? position.createdAt : position.date)
-      let now = new Date()
-      const target = isJobs ? jobs.value : brief.value
-
-      if (isJobs) {
-        time.setDate(time.getDate() + 1)
-        now.setHours(0, 0, 0, 0)
-
-        if (time >= now) time = '今天'
-        else if (time >= now.setDate(now.getDate() - 1)) time = '昨天'
-        else
-          time = `${time.getFullYear()} 年 ${time.getMonth() +
-            1} 月 ${time.getDate()} 日`
-      } else {
-        if (time.getFullYear() === now.getFullYear())
-          time = `${time.getMonth() + 1} 月 ${time.getDate()} 日`
-        else
-          time = `${time.getFullYear()} 年 ${time.getMonth() +
-            1} 月 ${time.getDate()} 日`
-      }
-
-      if (target[time]) target[time].push(position)
-      else context.root.$set(target, time, [position])
-    }
-
-    const nouns = [
-      'Java',
-      'UI',
-      'Web',
-      'PHP',
-      'Android',
-      'iOS',
-      'NET',
-      'Cocos2d'
-    ]
-    const lowerCaseNouns = nouns.map(noun => noun.toLowerCase())
-    const regex = new RegExp(`(.*)(${nouns.join('|')})(.*)`, 'i')
-    const normalize = str => {
-      const match = str.match(regex)
-
-      return match
-        ? `${match[1]}${nouns[lowerCaseNouns.indexOf(match[2].toLowerCase())]}${
-            match[3]
-          }`
-        : str
-    }
-
-    const observer = new IntersectionObserver(async ([entry]) => {
-      if (entry.isIntersecting) {
-        observer.unobserve(entry.target)
-
-        const { data } = await context.root
-          .ky('/api/jobs', {
-            searchParams: {
-              lastCursor: Date.parse(
-                [...[...Object.values(jobs.value)].pop()].pop().publishDate
-              )
-            }
-          })
-          .json()
-
-        data.forEach(position => categorize(position, true))
-      }
-    })
-
-    watch(
-      () => Object.values(jobs.value),
-      values => {
-        if (values.length) {
-          observer.observe([...context.refs.topic].pop())
-        }
-      }
+  setup(props, { refs }) {
+    const brief = value([])
+    const { topics: jobs } = infiniteScroll(
+      () => '/api/jobs',
+      () => Date.parse([...[...jobs.value].pop().positions].pop().publishDate),
+      refs
     )
 
+    const highlight = post =>
+      pangu
+        .spacing(post.content)
+        .split(post.jobTitle)
+        .join(` <strong>${post.jobTitle}</strong> `)
+
     onMounted(async () => {
-      const jobs = (await context.root.ky('/api/jobs').json()).data
-      jobs.forEach(position => categorize(position, true))
-
-      const brief = (await context.root.ky('/api/jobs/brief').json()).data
-      brief.forEach(position => categorize(position, false))
+      ;({ data: brief.value } = await api('/api/jobs/brief'))
+      ;({ data: jobs.value } = await api('/api/jobs'))
     })
-    onUnmounted(() => observer.disconnect())
 
-    return {
-      jobs,
-      brief,
-      normalize
-    }
+    return { brief, jobs, highlight }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import "../styles/variables.styl"
-
 .column h3
   margin-top 0
 
-@media (min-width 768px)
+@media (min-width: 768px)
   .columns
     column-count 2
 
@@ -194,6 +147,9 @@ export default {
 
   &:hover
     color theme
+
+    .expand-icon
+      fill theme
 
 .expand-icon
   width 24px

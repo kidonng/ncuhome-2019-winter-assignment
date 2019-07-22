@@ -6208,6 +6208,13 @@ vue-loader@^15.7.0:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-router-ga-lite@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.npm.taobao.org/vue-router-ga-lite/download/vue-router-ga-lite-0.1.1.tgz#5da6883dedd43409d357e39e32b165758cbc0727"
+  integrity sha1-XaaIPe3UNAnTV+OeMrFldYy8Byc=
+  dependencies:
+    ga-lite "^2.0.1"
+
 vue-router@3.0.7:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.7.tgz#b36ca107b4acb8ff5bc4ff824584059c23fcb87b"

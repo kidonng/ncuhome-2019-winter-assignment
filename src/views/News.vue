@@ -1,68 +1,60 @@
 <template>
   <div>
-    <article class="topic" v-for="entry in topics" ref="topic">
+    <article
+      class="topic"
+      v-for="{
+        url,
+        title,
+        summaryAuto,
+        authorName,
+        siteName,
+        publishDate
+      } in topics"
+      :key="url"
+      ref="topic"
+    >
       <h2>
-        <a :href="entry.url" target="_blank">
-          {{ entry.title | spacing }}
+        <a :href="url" target="_blank" rel="noreferrer noopener">
+          {{ title | spacing }}
         </a>
       </h2>
 
-      <div class="summary" v-if="entry.summaryAuto">
-        {{ entry.summaryAuto | spacing }}
+      <div class="summary" v-if="summaryAuto">
+        {{ summaryAuto | spacing }}
       </div>
 
       <div class="meta">
         {{
-          entry.authorName &&
-          entry.authorName !== '新浪科技' &&
-          entry.authorName !== '新浪科技综合' &&
-          entry.authorName !== 'www.qq.com'
-            ? `${entry.siteName} - ${entry.authorName}`
-            : entry.siteName
+          authorName &&
+          authorName !== '新浪科技' &&
+          authorName !== '新浪科技综合' &&
+          authorName !== 'www.qq.com'
+            ? `${siteName} - ${authorName}`
+            : siteName
         }}
-        <time>{{ entry.publishDate | format }}</time>
+        <time>{{ publishDate | format }}</time>
       </div>
     </article>
   </div>
 </template>
 
 <script>
-import { value, watch, onUnmounted } from 'vue-function-api'
+import { watch } from 'vue-function-api'
+import api from '../utils/api'
+import infiniteScroll from '../utils/infiniteScroll'
 
 export default {
-  setup(props, context) {
-    const topics = value([])
+  setup(props, { root, refs }) {
+    const { topics, observer } = infiniteScroll(
+      () => `/api/${root.$route.name}`,
+      () => Date.parse([...topics.value].pop().publishDate),
+      refs
+    )
 
-    const observer = new IntersectionObserver(async ([entry]) => {
-      if (entry.isIntersecting) {
-        observer.unobserve(entry.target)
-
-        const { data } = await context.root
-          .ky(`/api/${context.root.$route.name}`, {
-            searchParams: {
-              lastCursor: Date.parse([...topics.value].pop().publishDate)
-            }
-          })
-          .json()
-
-        topics.value = [...topics.value, ...data]
-      }
+    watch('$route', async ({ name }) => {
+      observer.disconnect()
+      ;({ data: topics.value } = await api(`/api/${name}`))
     })
-
-    watch(topics, topics => {
-      if (topics.length) {
-        observer.observe([...context.refs.topic].pop())
-      }
-    })
-
-    watch('$route', async () => {
-      const { data } = await context.root
-        .ky(`/api/${context.root.$route.name}`)
-        .json()
-      topics.value = data
-    })
-
-    onUnmounted(() => observer.disconnect())
 
     return { topics }
   }
@@ -70,8 +62,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../styles/variables.styl"
-
 .summary
   margin-bottom xxs
 

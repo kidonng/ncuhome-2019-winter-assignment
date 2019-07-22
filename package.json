@@ -1,5 +1,5 @@
 {
-  "name": "ncuhome-2019-winter-assignment",
+  "name": "readhub",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -8,13 +8,13 @@
     "now-build": "yarn build"
   },
   "dependencies": {
-    "ga-lite": "^2.0.1",
     "ky": "0.11.1",
     "nprogress": "0.2.0",
     "pangu": "4.0.7",
     "vue": "2.6.10",
     "vue-function-api": "^2.0.6",
-    "vue-router": "3.0.7"
+    "vue-router": "3.0.7",
+    "vue-router-ga-lite": "^0.1.1"
   },
   "devDependencies": {
     "@vue/cli-service": "3.9.3",

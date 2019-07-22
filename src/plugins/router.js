@@ -1,12 +1,13 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import Topics from '../views/Topics'
-import galite from 'ga-lite'
+import categories from '../categories'
+
+Vue.use(VueRouter)
+
 const News = () => import(/* webpackChunkName: 'news' */ '../views/News')
 
-Vue.use(Router)
-
-let router = new Router({
+const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -42,29 +43,14 @@ let router = new Router({
     },
     {
       path: '*',
-      redirect: {
-        name: 'topics'
-      }
+      redirect: { name: 'topics' }
     }
   ],
-  scrollBehavior: () => ({
-    x: 0,
-    y: 0
-  })
+  scrollBehavior: () => ({ y: 0 })
 })
 
-router.afterEach(to => {
-  if (router.app.GALoaded) {
-    galite('set', 'page', to.fullPath)
-    galite('send', 'pageview')
-  } else {
-    router.app.GALoaded = true
-    galite('create', 'UA-140053908-2', 'auto')
-    galite('send', 'pageview')
-  }
-
-  if (router.app.categories[to.name])
-    document.title = `Readhub - ${router.app.categories[to.name]}`
+router.afterEach(({ name }) => {
+  if (name !== 'topic') document.title = `Readhub - ${categories[name]}`
 })
 
 export default router
