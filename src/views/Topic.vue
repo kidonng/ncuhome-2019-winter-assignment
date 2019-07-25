@@ -44,8 +44,9 @@ export default {
     const topic = value(null)
 
     watch('$route', async $route => {
-      topic.value = await api(`/api/topic/${$route.params.id}`)
-      document.title = `${pangu.spacing(topic.value.title)} - Readhub`
+      const data = await api(`/api/topic/${$route.params.id}`)
+      topic.value = data
+      document.title = `${pangu.spacing(data.title)} - Readhub`
     })
 
     return { topic }
