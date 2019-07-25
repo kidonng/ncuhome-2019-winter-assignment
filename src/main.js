@@ -2,18 +2,8 @@ import Vue from 'vue'
 import './plugins/function-api'
 import router from './plugins/router'
 import App from './App'
-import ky from 'ky'
 import pangu from 'pangu'
-import NProgress from 'nprogress'
 
-NProgress.configure({ showSpinner: false })
-
-Vue.prototype.ky = ky.extend({
-  hooks: {
-    beforeRequest: [() => NProgress.start()],
-    afterResponse: [() => NProgress.done()]
-  }
-}).get
 Vue.prototype.categories = {
   topics: '热门',
   news: '科技',

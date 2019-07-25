@@ -18,7 +18,7 @@
       <h2>{{ date }}</h2>
       <section class="topic" v-for="positions in positionArray" ref="topic">
         <h3 @click="e => e.target.closest('.topic').classList.toggle('expand')">
-          {{ normalize(positions.jobTitle) | spacing }}
+          {{ positions.jobTitle | spacing }}
           <svg class="expand-icon" viewBox="0 0 24 24">
             <path
               d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
@@ -26,10 +26,7 @@
           </svg>
         </h3>
         <div class="meta">
-          {{
-            positions.jobsArray.map(i => normalize(i.title)).join('・')
-              | spacing
-          }}
+          {{ positions.jobsArray.map(job => job.title).join('・') | spacing }}
         </div>
         <div class="summary">
           {{ Object.keys(positions.cities)[0] }}、{{
@@ -42,9 +39,9 @@
         <div class="collapse">
           <div v-for="job in positions.jobsArray">
             <h4>
-              <a :href="job.url" target="_blank">{{
-                normalize(job.title) | spacing
-              }}</a>
+              <a :href="job.url" target="_blank">
+                {{ job.title | spacing }}
+              </a>
               <span class="meta">
                 {{ job.sponsor ? `${job.company}（赞助商）` : job.company }}
               </span>
@@ -77,18 +74,45 @@
 
 <script>
 import { value, watch, onMounted, onUnmounted } from 'vue-function-api'
+import api from '../utils/api'
 
 export default {
   setup(props, context) {
     const jobs = value({})
     const brief = value({})
 
+    // Normalize nouns
+    const nouns = [
+      'Java',
+      'UI',
+      'Web',
+      'PHP',
+      'Android',
+      'iOS',
+      'NET',
+      'Cocos2d'
+    ]
+    const lowerCasedNouns = nouns.map(noun => noun.toLowerCase())
+    const re = RegExp(`(.*)(${nouns.join('|')})(.*)`, 'i')
+    const normalize = str => {
+      const match = re.exec(str)
+
+      return match
+        ? `${match[1]}${
+            nouns[lowerCasedNouns.indexOf(match[2].toLowerCase())]
+          }${match[3]}`
+        : str
+    }
+
+    // Categorize data by date
     const categorize = (position, isJobs) => {
       let time = new Date(isJobs ? position.createdAt : position.date)
       let now = new Date()
-      const target = isJobs ? jobs.value : brief.value
+      const target = isJobs ? jobs : brief
 
       if (isJobs) {
+        position.jobsArray.forEach(job => (job.title = normalize(job.title)))
+
         time.setDate(time.getDate() + 1)
         now.setHours(0, 0, 0, 0)
 
@@ -105,45 +129,20 @@ export default {
             1} 月 ${time.getDate()} 日`
       }
 
-      if (target[time]) target[time].push(position)
-      else context.root.$set(target, time, [position])
+      if (target.value[time]) target.value[time].push(position)
+      else target.value = { ...target.value, [time]: [position] }
     }
 
-    const nouns = [
-      'Java',
-      'UI',
-      'Web',
-      'PHP',
-      'Android',
-      'iOS',
-      'NET',
-      'Cocos2d'
-    ]
-    const lowerCaseNouns = nouns.map(noun => noun.toLowerCase())
-    const regex = new RegExp(`(.*)(${nouns.join('|')})(.*)`, 'i')
-    const normalize = str => {
-      const match = str.match(regex)
-
-      return match
-        ? `${match[1]}${nouns[lowerCaseNouns.indexOf(match[2].toLowerCase())]}${
-            match[3]
-          }`
-        : str
-    }
-
+    // Infinite scroll
     const observer = new IntersectionObserver(async ([entry]) => {
       if (entry.isIntersecting) {
         observer.unobserve(entry.target)
 
-        const { data } = await context.root
-          .ky('/api/jobs', {
-            searchParams: {
-              lastCursor: Date.parse(
-                [...[...Object.values(jobs.value)].pop()].pop().publishDate
-              )
-            }
-          })
-          .json()
+        const { data } = await api('/api/jobs', {
+          lastCursor: Date.parse(
+            [...[...Object.values(jobs.value)].pop()].pop().publishDate
+          )
+        })
 
         data.forEach(position => categorize(position, true))
       }
@@ -151,38 +150,32 @@ export default {
 
     watch(
       () => Object.values(jobs.value),
-      values => {
-        if (values.length) {
-          observer.observe([...context.refs.topic].pop())
-        }
-      }
+      () => observer.observe([...context.refs.topic].pop()),
+      { lazy: true }
     )
 
     onMounted(async () => {
-      const jobs = (await context.root.ky('/api/jobs').json()).data
-      jobs.forEach(position => categorize(position, true))
+      const { data: jobs } = await api('/api/jobs')
+      const { data: brief } = await api('/api/jobs/brief')
 
-      const brief = (await context.root.ky('/api/jobs/brief').json()).data
+      jobs.forEach(position => categorize(position, true))
       brief.forEach(position => categorize(position, false))
     })
+
     onUnmounted(() => observer.disconnect())
 
-    return {
-      jobs,
-      brief,
-      normalize
-    }
+    return { jobs, brief }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import "../styles/variables.styl"
+@import '../styles/variables.styl'
 
 .column h3
   margin-top 0
 
-@media (min-width 768px)
+@media (min-width: 768px)
   .columns
     column-count 2
 

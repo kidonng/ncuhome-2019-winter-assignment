@@ -28,38 +28,33 @@
 
 <script>
 import { value, watch, onUnmounted } from 'vue-function-api'
+import api from '../utils/api'
 
 export default {
   setup(props, context) {
     const topics = value([])
 
+    // Infinite scroll
     const observer = new IntersectionObserver(async ([entry]) => {
       if (entry.isIntersecting) {
         observer.unobserve(entry.target)
 
-        const { data } = await context.root
-          .ky(`/api/${context.root.$route.name}`, {
-            searchParams: {
-              lastCursor: Date.parse([...topics.value].pop().publishDate)
-            }
-          })
-          .json()
-
+        const { data } = await api(`/api/${context.root.$route.name}`, {
+          lastCursor: Date.parse([...topics.value].pop().publishDate)
+        })
         topics.value = [...topics.value, ...data]
       }
     })
 
-    watch(topics, topics => {
-      if (topics.length) {
-        observer.observe([...context.refs.topic].pop())
-      }
+    watch('$route', async $route => {
+      observer.disconnect()
+
+      const { data } = await api(`/api/${$route.name}`)
+      topics.value = data
     })
 
-    watch('$route', async () => {
-      const { data } = await context.root
-        .ky(`/api/${context.root.$route.name}`)
-        .json()
-      topics.value = data
+    watch(topics, () => observer.observe([...context.refs.topic].pop()), {
+      lazy: true
     })
 
     onUnmounted(() => observer.disconnect())
@@ -70,7 +65,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../styles/variables.styl"
+@import '../styles/variables.styl'
 
 .summary
   margin-bottom xxs

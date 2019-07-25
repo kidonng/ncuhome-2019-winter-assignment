@@ -36,16 +36,15 @@
 
 <script>
 import { value, watch } from 'vue-function-api'
+import api from '../utils/api'
 import pangu from 'pangu'
 
 export default {
-  setup(props, context) {
+  setup() {
     const topic = value(null)
 
-    watch('$route', async () => {
-      topic.value = await context.root
-        .ky(`/api/topic/${context.root.$route.params.id}`)
-        .json()
+    watch('$route', async $route => {
+      topic.value = await api(`/api/topic/${$route.params.id}`)
       document.title = `${pangu.spacing(topic.value.title)} - Readhub`
     })
 
@@ -55,7 +54,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import "../styles/variables.styl"
+@import '../styles/variables.styl'
 
 .summary
   margin-top xxs
@@ -64,7 +63,7 @@ li
   & .meta
     display block
 
-    @media (min-width 768px)
+    @media (min-width: 768px)
       &
         display initial
         margin-left xxs
