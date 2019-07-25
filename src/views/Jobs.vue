@@ -73,96 +73,27 @@
 </template>
 
 <script>
-import { value, watch, onMounted, onUnmounted } from 'vue-function-api'
+import { value, onMounted } from 'vue-function-api'
 import api from '../utils/api'
+import categorize from '../utils/categorize'
+import infiniteScroll from '../utils/infiniteScroll'
 
 export default {
-  setup(props, context) {
-    const jobs = value({})
+  setup(props, { refs }) {
+    const { topics: jobs } = infiniteScroll(
+      () => '/api/jobs',
+      () =>
+        Date.parse([...[...Object.values(jobs.value)].pop()].pop().publishDate),
+      refs
+    )
     const brief = value({})
 
-    // Normalize nouns
-    const nouns = [
-      'Java',
-      'UI',
-      'Web',
-      'PHP',
-      'Android',
-      'iOS',
-      'NET',
-      'Cocos2d'
-    ]
-    const lowerCasedNouns = nouns.map(noun => noun.toLowerCase())
-    const re = RegExp(`(.*)(${nouns.join('|')})(.*)`, 'i')
-    const normalize = str => {
-      const match = re.exec(str)
-
-      return match
-        ? `${match[1]}${
-            nouns[lowerCasedNouns.indexOf(match[2].toLowerCase())]
-          }${match[3]}`
-        : str
-    }
-
-    // Categorize data by date
-    const categorize = (position, isJobs) => {
-      let time = new Date(isJobs ? position.createdAt : position.date)
-      let now = new Date()
-      const target = isJobs ? jobs : brief
-
-      if (isJobs) {
-        position.jobsArray.forEach(job => (job.title = normalize(job.title)))
-
-        time.setDate(time.getDate() + 1)
-        now.setHours(0, 0, 0, 0)
-
-        if (time >= now) time = '今天'
-        else if (time >= now.setDate(now.getDate() - 1)) time = '昨天'
-        else
-          time = `${time.getFullYear()} 年 ${time.getMonth() +
-            1} 月 ${time.getDate()} 日`
-      } else {
-        if (time.getFullYear() === now.getFullYear())
-          time = `${time.getMonth() + 1} 月 ${time.getDate()} 日`
-        else
-          time = `${time.getFullYear()} 年 ${time.getMonth() +
-            1} 月 ${time.getDate()} 日`
-      }
-
-      if (target.value[time]) target.value[time].push(position)
-      else target.value = { ...target.value, [time]: [position] }
-    }
-
-    // Infinite scroll
-    const observer = new IntersectionObserver(async ([entry]) => {
-      if (entry.isIntersecting) {
-        observer.unobserve(entry.target)
-
-        const { data } = await api('/api/jobs', {
-          lastCursor: Date.parse(
-            [...[...Object.values(jobs.value)].pop()].pop().publishDate
-          )
-        })
-
-        data.forEach(position => categorize(position, true))
-      }
-    })
-
-    watch(
-      () => Object.values(jobs.value),
-      () => observer.observe([...context.refs.topic].pop()),
-      { lazy: true }
-    )
-
     onMounted(async () => {
-      const { data: jobs } = await api('/api/jobs')
-      const { data: brief } = await api('/api/jobs/brief')
+      const { data: jobsData } = await api('/api/jobs')
+      const { data: briefData } = await api('/api/jobs/brief')
 
-      jobs.forEach(position => categorize(position, true))
-      brief.forEach(position => categorize(position, false))
+      ;[jobs.value, brief.value] = [categorize(jobsData), categorize(briefData)]
     })
-
-    onUnmounted(() => observer.disconnect())
 
     return { jobs, brief }
   }
@@ -170,8 +101,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/variables.styl'
-
 .column h3
   margin-top 0
 
@@ -187,6 +116,9 @@ export default {
 
   &:hover
     color theme
+
+    .expand-icon
+      fill theme
 
 .expand-icon
   width 24px

@@ -16,25 +16,17 @@
 </template>
 
 <script>
-import { value, watch, onMounted, onUnmounted } from 'vue-function-api'
+import { onMounted, onUnmounted } from 'vue-function-api'
 import api from '../utils/api'
+import infiniteScroll from '../utils/infiniteScroll'
 
 export default {
-  setup(props, context) {
-    const topics = value([])
-
-    // Infinite scroll
-    const observer = new IntersectionObserver(async ([entry]) => {
-      if (entry.isIntersecting) {
-        observer.unobserve(entry.target)
-
-        const { data } = await api('/api/topic', {
-          lastCursor: [...topics.value].pop().order
-        })
-
-        topics.value = [...topics.value, ...data]
-      }
-    })
+  setup(props, { refs }) {
+    const { topics } = infiniteScroll(
+      () => '/api/topic',
+      () => [...topics.value].pop().order,
+      refs
+    )
 
     // Load new topics every half minute
     const refresh = setInterval(async () => {
@@ -49,19 +41,12 @@ export default {
       }
     }, 30000)
 
-    watch(topics, () => observer.observe([...context.refs.topic].pop()), {
-      lazy: true
-    })
-
     onMounted(async () => {
       const { data } = await api('/api/topic')
       topics.value = data
     })
 
-    onUnmounted(() => {
-      observer.disconnect()
-      clearInterval(refresh)
-    })
+    onUnmounted(() => clearInterval(refresh))
 
     return { topics }
   }
@@ -69,8 +54,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/variables.styl'
-
 .meta
   font-weight initial
   margin-left xxs

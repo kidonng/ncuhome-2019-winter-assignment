@@ -27,24 +27,17 @@
 </template>
 
 <script>
-import { value, watch, onUnmounted } from 'vue-function-api'
+import { watch } from 'vue-function-api'
 import api from '../utils/api'
+import infiniteScroll from '../utils/infiniteScroll'
 
 export default {
-  setup(props, context) {
-    const topics = value([])
-
-    // Infinite scroll
-    const observer = new IntersectionObserver(async ([entry]) => {
-      if (entry.isIntersecting) {
-        observer.unobserve(entry.target)
-
-        const { data } = await api(`/api/${context.root.$route.name}`, {
-          lastCursor: Date.parse([...topics.value].pop().publishDate)
-        })
-        topics.value = [...topics.value, ...data]
-      }
-    })
+  setup(props, { refs, root }) {
+    const { topics, observer } = infiniteScroll(
+      () => `/api/${root.$route.name}`,
+      () => Date.parse([...topics.value].pop().publishDate),
+      refs
+    )
 
     watch('$route', async $route => {
       observer.disconnect()
@@ -53,20 +46,12 @@ export default {
       topics.value = data
     })
 
-    watch(topics, () => observer.observe([...context.refs.topic].pop()), {
-      lazy: true
-    })
-
-    onUnmounted(() => observer.disconnect())
-
     return { topics }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/variables.styl'
-
 .summary
   margin-bottom xxs
 

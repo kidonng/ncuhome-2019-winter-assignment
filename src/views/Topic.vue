@@ -23,11 +23,13 @@
         {{ topic.timeline.commonEntities.length ? '事件追踪' : '相关事件' }}
       </h3>
       <ul class="timeline">
-        <li v-for="topic in topic.timeline.topics">
-          <router-link :to="{ name: 'topic', params: { id: topic.id } }">
-            {{ topic.title | spacing }}
+        <li v-for="timelineTopic in topic.timeline.topics">
+          <router-link
+            :to="{ name: 'topic', params: { id: timelineTopic.id } }"
+          >
+            {{ timelineTopic.title | spacing }}
           </router-link>
-          <span class="meta">{{ topic.createdAt | format }}</span>
+          <span class="meta">{{ timelineTopic.createdAt | format }}</span>
         </li>
       </ul>
     </section>
@@ -45,6 +47,10 @@ export default {
 
     watch('$route', async $route => {
       const data = await api(`/api/topic/${$route.params.id}`)
+
+      // The first item is current topic
+      if (data.timeline && data.timeline.topics) data.timeline.topics.shift()
+
       topic.value = data
       document.title = `${pangu.spacing(data.title)} - Readhub`
     })
@@ -55,8 +61,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '../styles/variables.styl'
-
 .summary
   margin-top xxs
 
@@ -68,8 +72,4 @@ li
       &
         display initial
         margin-left xxs
-
-  // Hide current topic
-  .timeline &:first-child
-    display none
 </style>
