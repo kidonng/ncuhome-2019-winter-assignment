@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Topics from '../views/Topics'
+import categories from '../categories'
 
 Vue.use(VueRouter)
 
 const News = () => import(/* webpackChunkName: 'news' */ '../views/News')
 
-export default new VueRouter({
+const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -45,8 +46,11 @@ export default new VueRouter({
       redirect: { name: 'topics' }
     }
   ],
-  scrollBehavior: () => ({
-    x: 0,
-    y: 0
-  })
+  scrollBehavior: () => ({ y: 0 })
 })
+
+router.afterEach(({ name }) => {
+  if (name !== 'topic') document.title = `Readhub - ${categories[name]}`
+})
+
+export default router

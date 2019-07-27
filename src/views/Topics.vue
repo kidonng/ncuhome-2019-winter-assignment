@@ -1,15 +1,20 @@
 <template>
   <div>
-    <article class="topic" v-for="topic in topics" ref="topic">
+    <article
+      class="topic"
+      v-for="{ id, title, createdAt, summary } in topics"
+      :key="id"
+      ref="topic"
+    >
       <h2>
-        <router-link :to="{ name: 'topic', params: { id: topic.id } }">
-          {{ topic.title | spacing }}
+        <router-link :to="{ name: 'topic', params: { id } }">
+          {{ title | spacing }}
         </router-link>
-        <time class="meta">{{ topic.createdAt | format }}</time>
+        <time class="meta">{{ createdAt | format }}</time>
       </h2>
 
       <div class="summary">
-        {{ topic.summary | spacing }}
+        {{ summary | spacing }}
       </div>
     </article>
   </div>
@@ -41,10 +46,7 @@ export default {
       }
     }, 30000)
 
-    onMounted(async () => {
-      const { data } = await api('/api/topic')
-      topics.value = data
-    })
+    onMounted(async () => ({ data: topics.value } = await api('/api/topic')))
 
     onUnmounted(() => clearInterval(refresh))
 

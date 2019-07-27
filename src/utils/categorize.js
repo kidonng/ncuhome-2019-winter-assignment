@@ -1,34 +1,39 @@
 import normalize from './normalize'
 
-// Categorize position by date
-export default raw => {
-  const data = {}
+// Categorize positions by date
+export default positions => {
+  const data = []
 
-  raw.forEach(position => {
-    let time = new Date(position.createdAt || position.date)
-    let now = new Date()
+  positions.forEach(position => {
+    const isJobs = !!position.createdAt
+    const time = new Date(isJobs ? position.createdAt : position.date)
+    const now = new Date()
+    let date
 
-    if (position.jobsArray) {
+    if (isJobs) {
+      position.jobTitle = normalize(position.jobTitle)
       position.jobsArray.forEach(job => (job.title = normalize(job.title)))
 
       time.setDate(time.getDate() + 1)
       now.setHours(0, 0, 0, 0)
 
-      if (time >= now) time = '今天'
-      else if (time >= now.setDate(now.getDate() - 1)) time = '昨天'
+      if (time >= now) date = '今天'
+      else if (time >= now.setDate(now.getDate() - 1)) date = '昨天'
       else
-        time = `${time.getFullYear()} 年 ${time.getMonth() +
+        date = `${time.getFullYear()} 年 ${time.getMonth() +
           1} 月 ${time.getDate()} 日`
     } else {
       if (time.getFullYear() === now.getFullYear())
-        time = `${time.getMonth() + 1} 月 ${time.getDate()} 日`
+        date = `${time.getMonth() + 1} 月 ${time.getDate()} 日`
       else
-        time = `${time.getFullYear()} 年 ${time.getMonth() +
+        date = `${time.getFullYear()} 年 ${time.getMonth() +
           1} 月 ${time.getDate()} 日`
     }
 
-    if (data[time]) data[time].push(position)
-    else data[time] = [position]
+    const target = data.find(item => item.date === date)
+
+    if (target) target.positions.push(position)
+    else data.push({ date, positions: [position] })
   })
 
   return data

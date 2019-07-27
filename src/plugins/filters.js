@@ -12,10 +12,12 @@ Vue.filter('post', post =>
 
 Vue.filter('format', time => {
   time = new Date(time)
-  let now = new Date()
-  let today = new Date()
-  today.setHours(0, 0, 0, 0)
+
+  const now = new Date()
   const seconds = Math.floor((now - time) / 1000)
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
   if (seconds < 60) return '刚刚'
   else if (seconds < 3600) return `${Math.floor(seconds / 60)} 分钟前`

@@ -9,11 +9,11 @@
     <section>
       <h3>媒体报道</h3>
       <ul>
-        <li v-for="news in topic.newsArray">
-          <a :href="news.url" target="_blank">
-            {{ news.title | spacing }}
+        <li v-for="{ url, title, siteName } in topic.newsArray" :key="url">
+          <a :href="url" target="_blank" rel="noreferrer noopener">
+            {{ title | spacing }}
           </a>
-          <span class="meta">{{ news.siteName }}</span>
+          <span class="meta">{{ siteName }}</span>
         </li>
       </ul>
     </section>
@@ -23,13 +23,11 @@
         {{ topic.timeline.commonEntities.length ? '事件追踪' : '相关事件' }}
       </h3>
       <ul class="timeline">
-        <li v-for="timelineTopic in topic.timeline.topics">
-          <router-link
-            :to="{ name: 'topic', params: { id: timelineTopic.id } }"
-          >
-            {{ timelineTopic.title | spacing }}
+        <li v-for="{ id, title, createdAt } in topic.timeline.topics" :key="id">
+          <router-link :to="{ name: 'topic', params: { id } }">
+            {{ title | spacing }}
           </router-link>
-          <span class="meta">{{ timelineTopic.createdAt | format }}</span>
+          <span class="meta">{{ createdAt | format }}</span>
         </li>
       </ul>
     </section>
@@ -45,10 +43,10 @@ export default {
   setup() {
     const topic = value(null)
 
-    watch('$route', async $route => {
-      const data = await api(`/api/topic/${$route.params.id}`)
+    watch('$route', async ({ params: { id } }) => {
+      const data = await api(`/api/topic/${id}`)
 
-      // The first item is current topic
+      // Remove current topic
       if (data.timeline && data.timeline.topics) data.timeline.topics.shift()
 
       topic.value = data

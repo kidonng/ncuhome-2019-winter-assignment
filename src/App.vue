@@ -25,26 +25,10 @@
 </template>
 
 <script>
-import { onMounted } from 'vue-function-api'
+import categories from './categories'
 
 export default {
-  setup() {
-    const categories = {
-      topics: '热门',
-      news: '科技',
-      technews: '开发',
-      blockchain: '区块',
-      jobs: '招聘'
-    }
-
-    onMounted(function() {
-      this.$router.afterEach(({ name }) => {
-        if (categories[name]) document.title = `Readhub - ${categories[name]}`
-      })
-    })
-
-    return { categories }
-  }
+  setup: () => ({ categories })
 }
 </script>
 
