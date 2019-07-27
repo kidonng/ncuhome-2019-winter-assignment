@@ -6,9 +6,11 @@
         <div class="column" v-for="{ date, positions } in brief" :key="date">
           <h3>{{ date }}</h3>
           <ul>
-            <li v-for="(position, i) in positions" :key="i">
-              {{ position | post }}
-            </li>
+            <li
+              v-for="(position, i) in positions"
+              :key="i"
+              v-html="highlight(position)"
+            />
           </ul>
         </div>
       </div>
@@ -100,6 +102,7 @@
 
 <script>
 import { value, onMounted } from 'vue-function-api'
+import pangu from 'pangu'
 import api from '../utils/api'
 import infiniteScroll from '../utils/infiniteScroll'
 
@@ -112,12 +115,18 @@ export default {
       refs
     )
 
+    const highlight = post =>
+      pangu
+        .spacing(post.content)
+        .split(post.jobTitle)
+        .join(` <strong>${post.jobTitle}</strong> `)
+
     onMounted(async () => {
       ;({ data: brief.value } = await api('/api/jobs/brief'))
       ;({ data: jobs.value } = await api('/api/jobs'))
     })
 
-    return { brief, jobs }
+    return { brief, jobs, highlight }
   }
 }
 </script>

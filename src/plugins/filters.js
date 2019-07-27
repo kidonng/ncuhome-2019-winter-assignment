@@ -3,13 +3,6 @@ import pangu from 'pangu'
 
 Vue.filter('spacing', text => pangu.spacing(text))
 
-Vue.filter('post', post =>
-  pangu
-    .spacing(post.content)
-    .split(post.jobTitle)
-    .join(`“${post.jobTitle}”`)
-)
-
 Vue.filter('format', time => {
   time = new Date(time)
 
