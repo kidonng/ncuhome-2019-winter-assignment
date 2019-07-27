@@ -7,6 +7,8 @@
 
 </div>
 
+**DISCLAIMER** This project is for demonstration use only. Any content's copyright belongs to their owner.
+
 Minimal [Readhub](https://readhub.cn/) emulator.
 
 ## Development
