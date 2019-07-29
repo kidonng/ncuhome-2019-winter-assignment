@@ -78,9 +78,11 @@
             </h4>
 
             <div class="meta">
-              <span class="salary">{{
-                salaryLower <= 0 ? '面议' : `${salaryLower}-${salaryUpper}k`
-              }}</span>
+              <span class="salary">
+                {{
+                  salaryLower > 0 ? `${salaryLower}-${salaryUpper}k` : '面议'
+                }}
+              </span>
               <span class="experience">
                 {{
                   experienceLower === -1
