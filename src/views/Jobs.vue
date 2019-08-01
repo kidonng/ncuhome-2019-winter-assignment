@@ -1,17 +1,29 @@
 <template>
   <div>
-    <article v-if="brief.length">
-      <h2>行情简报</h2>
-      <div class="columns">
-        <div class="column" v-for="{ date, positions } in brief" :key="date">
-          <h3>{{ date }}</h3>
-          <ul>
-            <li
-              v-for="(position, i) in positions"
-              :key="i"
-              v-html="highlight(position)"
-            />
-          </ul>
+    <article v-if="brief.length" ref="brief">
+      <h2
+        class="expandable"
+        @click="$refs.brief.classList.toggle('expand-brief')"
+      >
+        行情简报
+        <svg class="expand-icon" viewBox="0 0 24 24">
+          <path
+            d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
+          />
+        </svg>
+      </h2>
+      <div class="collapse">
+        <div class="columns">
+          <div class="column" v-for="{ date, positions } in brief" :key="date">
+            <h3>{{ date }}</h3>
+            <ul>
+              <li
+                v-for="(position, i) in positions"
+                :key="i"
+                v-html="highlight(position)"
+              />
+            </ul>
+          </div>
         </div>
       </div>
     </article>
@@ -34,9 +46,12 @@
         :key="i"
         ref="topic"
       >
-        <h3 @click="e => e.target.closest('.topic').classList.toggle('expand')">
+        <h3
+          class="expandable"
+          @click="$refs.topic[i].classList.toggle('expand')"
+        >
           {{ jobTitle | spacing }}
-          <svg class="expand-icon" viewBox="0 0 24 24">
+          <svg viewBox="0 0 24 24">
             <path
               d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
             />
@@ -118,10 +133,11 @@ export default {
     )
 
     const highlight = post =>
-      pangu
-        .spacing(post.content)
-        .split(post.jobTitle)
-        .join(` <strong>${post.jobTitle}</strong> `)
+      pangu.spacing(
+        post.content
+          .split(post.jobTitle)
+          .join(` <strong>${post.jobTitle}</strong> `)
+      )
 
     onMounted(async () => {
       ;({ data: brief.value } = await api('/api/jobs/brief'))
@@ -144,22 +160,23 @@ export default {
   .column
     break-inside avoid
 
-.topic h3
+.expandable
   cursor pointer
+
+  svg
+    width 24px
+    vertical-align bottom
+    transition transform .3s
+
+    .expand &
+    .expand-brief &
+      transform rotate(180deg)
 
   &:hover
     color theme
 
-    .expand-icon
+    svg
       fill theme
-
-.expand-icon
-  width 24px
-  vertical-align bottom
-  transition transform .3s
-
-  .expand &
-    transform rotate(180deg)
 
 .summary
   margin-top xxs
@@ -171,6 +188,9 @@ export default {
 
   .expand &
     max-height rem(320)
+
+  .expand-brief &
+    max-height rem(2500)
 
 h4 .meta
   font-weight initial
