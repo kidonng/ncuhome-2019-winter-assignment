@@ -44,7 +44,7 @@ export default {
     const topic = value(null)
 
     watch('$route', async ({ params: { id } }) => {
-      const data = await api(`/api/topic/${id}`)
+      const data = await api(`topic/${id}`)
 
       // Remove current topic
       if (data.timeline && data.timeline.topics) data.timeline.topics.shift()

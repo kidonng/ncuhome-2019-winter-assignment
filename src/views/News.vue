@@ -46,14 +46,14 @@ import infiniteScroll from '../utils/infiniteScroll'
 export default {
   setup(props, { root, refs }) {
     const { topics, observer } = infiniteScroll(
-      () => `/api/${root.$route.name}`,
+      () => root.$route.name,
       () => Date.parse([...topics.value].pop().publishDate),
       refs
     )
 
     watch('$route', async ({ name }) => {
       observer.disconnect()
-      ;({ data: topics.value } = await api(`/api/${name}`))
+      ;({ data: topics.value } = await api(name))
     })
 
     return { topics }

@@ -13,6 +13,6 @@ Minimal [Readhub](https://readhub.cn/) emulator.
 
 ## Development
 
-- Setup `yarn` & `yarn add now --dev`
-- Run `now dev`
+- Install Now CLI `yarn add now --dev`
+- Development `now dev`
 - Build `yarn build`

@@ -2,11 +2,11 @@ import { value, computed, watch, onUnmounted } from 'vue-function-api'
 import api from './api'
 
 export default (url, lastCursor, refs) => {
-  const isJobs = url() === '/api/jobs'
+  const isJobs = url() === 'jobs'
   const topics = value([])
 
-  // Default pageSize is 20
-  let totalItems = 20 + 1
+  // Default `pageSize` is 20, need `totalItems > refs.topic.length`
+  let totalItems = 21
 
   const observer = new IntersectionObserver(
     async ([{ isIntersecting, target }]) => {
