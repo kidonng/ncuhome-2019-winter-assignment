@@ -28,25 +28,25 @@ import infiniteScroll from '../utils/infiniteScroll'
 export default {
   setup(props, { refs }) {
     const { topics } = infiniteScroll(
-      () => '/api/topic',
+      () => 'topic',
       () => [...topics.value].pop().order,
       refs
     )
 
     // Load new topics every half minute
     const refresh = setInterval(async () => {
-      const { count } = await api('/api/topic/newCount', {
+      const { count } = await api('topic/newCount', {
         latestCursor: topics.value[0].order
       })
 
       if (count) {
-        const { data } = await api('/api/topic', { pageSize: count })
+        const { data } = await api('topic', { pageSize: count })
 
         topics.value = [...data, ...topics.value]
       }
     }, 30000)
 
-    onMounted(async () => ({ data: topics.value } = await api('/api/topic')))
+    onMounted(async () => ({ data: topics.value } = await api('topic')))
 
     onUnmounted(() => clearInterval(refresh))
 

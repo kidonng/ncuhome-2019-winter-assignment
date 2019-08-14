@@ -4,8 +4,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "now-dev": "yarn serve",
-    "now-build": "yarn build"
+    "now-dev": "yarn serve"
   },
   "dependencies": {
     "ky": "0.11.2",

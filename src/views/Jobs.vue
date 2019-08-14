@@ -127,7 +127,7 @@ export default {
   setup(props, { refs }) {
     const brief = value([])
     const { topics: jobs } = infiniteScroll(
-      () => '/api/jobs',
+      () => 'jobs',
       () => Date.parse([...[...jobs.value].pop().positions].pop().publishDate),
       refs
     )
@@ -140,8 +140,8 @@ export default {
       )
 
     onMounted(async () => {
-      ;({ data: brief.value } = await api('/api/jobs/brief'))
-      ;({ data: jobs.value } = await api('/api/jobs'))
+      ;({ data: brief.value } = await api('jobs/brief'))
+      ;({ data: jobs.value } = await api('jobs'))
     })
 
     return { brief, jobs, highlight }
