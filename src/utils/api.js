@@ -9,7 +9,7 @@ export default async (url, searchParams) => {
   NProgress.start()
 
   const res = await ky(url, {
-    prefixUrl: 'https://api.kidonng.me/readhub',
+    prefixUrl: '/api',
     searchParams
   }).json()
   if (url.startsWith('jobs')) res.data = categorize(res.data)
