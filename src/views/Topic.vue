@@ -10,7 +10,7 @@
       <h3>媒体报道</h3>
       <ul>
         <li v-for="{ url, title, siteName } in topic.newsArray" :key="url">
-          <a :href="url" target="_blank" rel="noreferrer noopener">
+          <a :href="url">
             {{ title | spacing }}
           </a>
           <span class="meta">{{ siteName }}</span>
@@ -35,21 +35,21 @@
 </template>
 
 <script>
-import { value, watch } from 'vue-function-api'
+import { ref, watch } from '@vue/composition-api'
 import api from '../utils/api'
 import pangu from 'pangu'
 
 export default {
-  setup() {
-    const topic = value(null)
+  setup(props, { root }) {
+    const topic = ref(null)
 
-    watch('$route', async ({ params: { id } }) => {
-      const data = await api(`topic/${id}`)
+    watch(async () => {
+      const { timeline, ...data } = await api(`topic/${root.$route.params.id}`)
 
       // Remove current topic
-      if (data.timeline && data.timeline.topics) data.timeline.topics.shift()
+      if (timeline && timeline.topics) timeline.topics.shift()
 
-      topic.value = data
+      topic.value = { timeline, ...data }
       document.title = `${pangu.spacing(data.title)} - Readhub`
     })
 

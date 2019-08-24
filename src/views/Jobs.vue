@@ -1,9 +1,9 @@
 <template>
   <div>
-    <article v-if="brief.length" ref="brief">
+    <article v-if="brief.length" ref="toggle">
       <h2
         class="expandable"
-        @click="$refs.brief.classList.toggle('expand-brief')"
+        @click="$refs.toggle.classList.toggle('expand-brief')"
       >
         行情简报
         <svg class="expand-icon" viewBox="0 0 24 24">
@@ -44,11 +44,11 @@
         },
         i) in positions"
         :key="i"
-        ref="topic"
+        ref="refs"
       >
         <h3
           class="expandable"
-          @click="$refs.topic[i].classList.toggle('expand')"
+          @click="$refs.refs[i].classList.toggle('expand')"
         >
           {{ jobTitle | spacing }}
           <svg viewBox="0 0 24 24">
@@ -84,7 +84,7 @@
             :key="url"
           >
             <h4>
-              <a :href="url" target="_blank" rel="noreferrer noopener">
+              <a :href="url">
                 {{ title | spacing }}
               </a>
               <span class="meta">
@@ -118,19 +118,21 @@
 </template>
 
 <script>
-import { value, onMounted } from 'vue-function-api'
+import { ref, computed, onMounted } from '@vue/composition-api'
 import pangu from 'pangu'
 import api from '../utils/api'
-import infiniteScroll from '../utils/infiniteScroll'
+import useInfiniteScroll from '../utils/infiniteScroll'
 
 export default {
-  setup(props, { refs }) {
-    const brief = value([])
-    const { topics: jobs } = infiniteScroll(
-      () => 'jobs',
-      () => Date.parse([...[...jobs.value].pop().positions].pop().publishDate),
-      refs
+  setup() {
+    const brief = ref([])
+    const jobs = ref([])
+    const refs = ref(null)
+    const route = ref('jobs')
+    const lastCursor = computed(() =>
+      Date.parse([...[...jobs.value].pop().positions].pop().publishDate)
     )
+    useInfiniteScroll(jobs, refs, route, lastCursor)
 
     const highlight = post =>
       pangu.spacing(
@@ -144,7 +146,7 @@ export default {
       ;({ data: jobs.value } = await api('jobs'))
     })
 
-    return { brief, jobs, highlight }
+    return { brief, jobs, refs, highlight }
   }
 }
 </script>

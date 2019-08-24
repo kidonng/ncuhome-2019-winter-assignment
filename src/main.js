@@ -1,9 +1,9 @@
 import Vue from 'vue'
-import './plugins/function-api'
+import './plugins/composition-api'
 import './plugins/filters'
 import './plugins/analytics'
 import router from './plugins/router'
-import App from './App'
+import App from './App.vue'
 
 new Vue({
   router,

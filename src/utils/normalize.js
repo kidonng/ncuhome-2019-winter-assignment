@@ -2,7 +2,7 @@
 const nouns = ['Java', 'UI', 'Web', 'PHP', 'Android', 'iOS', 'NET', 'Cocos2d']
 // Extra nouns
 nouns.push('SaaS', 'Golang', 'Linux')
-const lowercasedNouns = nouns.map(noun => noun.toLowerCase())
+const lowercaseNouns = nouns.map(noun => noun.toLowerCase())
 
 const re = RegExp(`(.*)(${nouns.join('|')})(.*)`, 'i')
 
@@ -11,7 +11,7 @@ export default str => {
 
   if (groups) {
     const [, head, noun, tail] = groups
-    const index = lowercasedNouns.indexOf(noun.toLowerCase())
+    const index = lowercaseNouns.indexOf(noun.toLowerCase())
 
     return `${head}${nouns[index]}${tail}`
   }

@@ -1,10 +1,7 @@
-import { value, computed, watch, onUnmounted } from 'vue-function-api'
+import { watch, onUnmounted } from '@vue/composition-api'
 import api from './api'
 
-export default (url, lastCursor, refs) => {
-  const isJobs = url() === 'jobs'
-  const topics = value([])
-
+export default (topics, refs, route, lastCursor) => {
   // Default `pageSize` is 20, need `totalItems > refs.topic.length`
   let totalItems = 21
 
@@ -13,13 +10,13 @@ export default (url, lastCursor, refs) => {
       if (isIntersecting) {
         observer.unobserve(target)
 
-        const res = await api(url(), {
-          lastCursor: lastCursor()
+        const res = await api(route.value, {
+          lastCursor: lastCursor.value
         })
 
         totalItems = res.totalItems
 
-        if (isJobs)
+        if (route.value === 'jobs')
           res.data.forEach(item => {
             const target = topics.value.find(({ date }) => date === item.date)
 
@@ -32,19 +29,12 @@ export default (url, lastCursor, refs) => {
     }
   )
 
-  const source = isJobs
-    ? computed(() => topics.value.map(item => item.positions))
-    : topics
-  watch(
-    source,
-    () => {
-      if (totalItems > refs.topic.length)
-        observer.observe([...refs.topic].pop())
-    },
-    { lazy: true }
-  )
+  watch(() => {
+    if (refs.value && refs.value.length < totalItems)
+      observer.observe([...refs.value].pop())
+  })
 
   onUnmounted(() => observer.disconnect())
 
-  return { topics, observer }
+  return observer
 }

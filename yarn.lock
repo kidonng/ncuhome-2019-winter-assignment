@@ -215,6 +215,13 @@
     source-map "~0.6.1"
     vue-template-es2015-compiler "^1.9.0"
 
+"@vue/composition-api@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-0.1.0.tgz#0bbac2259fcb8b1cafed3ef9fdeed99d2c55676d"
+  integrity sha512-+7sWfUkfrfWCW1Imdd4raLpqyO8H+CRn8B4IwxzGXYOXfdln2T34pU8PCM/Dsy3YQX1g+ULXSws77tGF8ndKzA==
+  dependencies:
+    tslib "^1.9.3"
+
 "@vue/preload-webpack-plugin@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@vue/preload-webpack-plugin/-/preload-webpack-plugin-1.1.1.tgz#18723530d304f443021da2292d6ec9502826104a"
@@ -6278,13 +6285,6 @@ vm-browserify@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
   integrity sha512-iq+S7vZJE60yejDYM0ek6zg308+UZsdtPExWP9VZoCFCz1zkJoXFnAX7aZfd/ZwrkidzdUZL0C/ryW+JwAiIGw==
-
-vue-function-api@^2.1.2:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/vue-function-api/-/vue-function-api-2.2.0.tgz#06aeb76fcbcf27d8591a1f87cee8d3d771d7feed"
-  integrity sha512-Qyg5IIi+1Zj5U3aHQ55K8nB98BwytxDv0HGWPssQFo9M32QDXHIwzgSE+BhUlzyclb1XkPiLubXApja1WQSwSQ==
-  dependencies:
-    tslib "^1.9.3"
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.3"

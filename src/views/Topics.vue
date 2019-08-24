@@ -4,7 +4,7 @@
       class="topic"
       v-for="{ id, title, createdAt, summary } in topics"
       :key="id"
-      ref="topic"
+      ref="refs"
     >
       <h2>
         <router-link :to="{ name: 'topic', params: { id } }">
@@ -21,19 +21,19 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted } from 'vue-function-api'
+import { ref, computed, onMounted, onUnmounted } from '@vue/composition-api'
 import api from '../utils/api'
-import infiniteScroll from '../utils/infiniteScroll'
+import useInfiniteScroll from '../utils/infiniteScroll'
 
 export default {
-  setup(props, { refs }) {
-    const { topics } = infiniteScroll(
-      () => 'topic',
-      () => [...topics.value].pop().order,
-      refs
-    )
+  setup() {
+    const topics = ref([])
+    const refs = ref(null)
+    const route = ref('topic')
+    const lastCursor = computed(() => [...topics.value].pop().order)
+    useInfiniteScroll(topics, refs, route, lastCursor)
 
-    // Load new topics every half minute
+    // Refresh topics
     const refresh = setInterval(async () => {
       const { count } = await api('topic/newCount', {
         latestCursor: topics.value[0].order
@@ -44,13 +44,13 @@ export default {
 
         topics.value = [...data, ...topics.value]
       }
-    }, 30000)
+    }, 30 * 1000)
 
     onMounted(async () => ({ data: topics.value } = await api('topic')))
 
     onUnmounted(() => clearInterval(refresh))
 
-    return { topics }
+    return { topics, refs }
   }
 }
 </script>

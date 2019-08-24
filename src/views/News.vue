@@ -11,10 +11,10 @@
         publishDate
       } in topics"
       :key="url"
-      ref="topic"
+      ref="refs"
     >
       <h2>
-        <a :href="url" target="_blank" rel="noreferrer noopener">
+        <a :href="url">
           {{ title | spacing }}
         </a>
       </h2>
@@ -39,24 +39,26 @@
 </template>
 
 <script>
-import { watch } from 'vue-function-api'
+import { ref, computed, watch } from '@vue/composition-api'
 import api from '../utils/api'
-import infiniteScroll from '../utils/infiniteScroll'
+import useInfiniteScroll from '../utils/infiniteScroll'
 
 export default {
-  setup(props, { root, refs }) {
-    const { topics, observer } = infiniteScroll(
-      () => root.$route.name,
-      () => Date.parse([...topics.value].pop().publishDate),
-      refs
+  setup(props, { root }) {
+    const topics = ref([])
+    const refs = ref(null)
+    const route = computed(() => root.$route.name)
+    const lastCursor = computed(() =>
+      Date.parse([...topics.value].pop().publishDate)
     )
+    const observer = useInfiniteScroll(topics, refs, route, lastCursor)
 
-    watch('$route', async ({ name }) => {
+    watch(async () => {
       observer.disconnect()
-      ;({ data: topics.value } = await api(name))
+      ;({ data: topics.value } = await api(root.$route.name))
     })
 
-    return { topics }
+    return { topics, refs }
   }
 }
 </script>

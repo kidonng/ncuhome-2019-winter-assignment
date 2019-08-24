@@ -1,11 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Topics from '../views/Topics'
-import categories from '../categories'
+import Topics from '../views/Topics.vue'
 
 Vue.use(VueRouter)
 
-const News = () => import(/* webpackChunkName: 'news' */ '../views/News')
+const News = () => import(/* webpackChunkName: 'news' */ '../views/News.vue')
 
 const router = new VueRouter({
   mode: 'history',
@@ -19,7 +18,8 @@ const router = new VueRouter({
     {
       name: 'topic',
       path: '/topic/:id',
-      component: () => import(/* webpackChunkName: 'topic' */ '../views/Topic')
+      component: () =>
+        import(/* webpackChunkName: 'topic' */ '../views/Topic.vue')
     },
     {
       name: 'news',
@@ -39,18 +39,28 @@ const router = new VueRouter({
     {
       name: 'jobs',
       path: '/jobs',
-      component: () => import(/* webpackChunkName: 'jobs' */ '../views/Jobs')
+      component: () =>
+        import(/* webpackChunkName: 'jobs' */ '../views/Jobs.vue')
     },
     {
       path: '*',
       redirect: { name: 'topics' }
     }
   ],
-  scrollBehavior: () => ({ y: 0 })
+  scrollBehavior: () => ({ x: 0, y: 0 })
 })
 
+export const categories = {
+  topics: '热门',
+  news: '科技',
+  technews: '开发',
+  blockchain: '区块',
+  jobs: '招聘'
+}
+const routes = { topic: '话题', ...categories }
+
 router.afterEach(({ name }) => {
-  if (name !== 'topic') document.title = `Readhub - ${categories[name]}`
+  document.title = `Readhub - ${routes[name]}`
 })
 
 export default router

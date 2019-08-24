@@ -2,12 +2,7 @@
   <div>
     <nav>
       <h1>
-        <a
-          href="https://github.com/kidonng/readhub"
-          title="GitHub"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
+        <a href="https://github.com/kidonng/readhub" title="GitHub">
           Readhub
         </a>
       </h1>
@@ -25,10 +20,10 @@
 </template>
 
 <script>
-import categories from './categories'
+import { categories } from './plugins/router'
 
 export default {
-  setup: () => ({ categories })
+  data: () => ({ categories })
 }
 </script>
 
