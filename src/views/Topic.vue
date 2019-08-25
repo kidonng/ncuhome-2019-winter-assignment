@@ -34,17 +34,18 @@
   </article>
 </template>
 
-<script>
-import { ref, watch } from '@vue/composition-api'
-import api from '../utils/api'
-import pangu from 'pangu'
+<script lang="ts">
+import { ref, watch, createComponent } from '@vue/composition-api'
+import { api, pangu } from '@/utils'
 
-export default {
+export default createComponent<{}>({
   setup(props, { root }) {
-    const topic = ref(null)
+    const topic = ref<FullTopic>()
 
     watch(async () => {
-      const { timeline, ...data } = await api(`topic/${root.$route.params.id}`)
+      const { timeline, ...data } = (await api(
+        `topic/${root.$route.params.id}`
+      )) as FullTopic
 
       // Remove current topic
       if (timeline && timeline.topics) timeline.topics.shift()
@@ -55,7 +56,7 @@ export default {
 
     return { topic }
   }
-}
+})
 </script>
 
 <style lang="stylus" scoped>

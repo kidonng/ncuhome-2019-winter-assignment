@@ -6,7 +6,7 @@ const lowercaseNouns = nouns.map(noun => noun.toLowerCase())
 
 const re = RegExp(`(.*)(${nouns.join('|')})(.*)`, 'i')
 
-export default str => {
+export function normalize(str: string) {
   const groups = str.match(re)
 
   if (groups) {

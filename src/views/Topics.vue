@@ -20,39 +20,36 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, onMounted, onUnmounted } from '@vue/composition-api'
-import api from '../utils/api'
-import useInfiniteScroll from '../utils/infiniteScroll'
+<script lang="ts">
+import { onUnmounted, createComponent } from '@vue/composition-api'
+import { api, useList } from '@/utils'
+import { Data, ListReturn } from '@/types'
 
-export default {
+export default createComponent({
   setup() {
-    const topics = ref([])
-    const refs = ref(null)
-    const route = ref('topic')
-    const lastCursor = computed(() => [...topics.value].pop().order)
-    useInfiniteScroll(topics, refs, route, lastCursor)
+    const lastCursor = () => topics.value.slice(-1)[0].order
+    const { topics, refs } = useList('topic', lastCursor) as ListReturn<Topic[]>
 
     // Refresh topics
     const refresh = setInterval(async () => {
-      const { count } = await api('topic/newCount', {
+      const { count } = (await api('topic/newCount', {
         latestCursor: topics.value[0].order
-      })
+      })) as TopicNewCount
 
       if (count) {
-        const { data } = await api('topic', { pageSize: count })
+        const { data } = (await api('topic', { pageSize: count })) as Data<
+          Topic[]
+        >
 
         topics.value = [...data, ...topics.value]
       }
     }, 30 * 1000)
 
-    onMounted(async () => ({ data: topics.value } = await api('topic')))
-
     onUnmounted(() => clearInterval(refresh))
 
     return { topics, refs }
   }
-}
+})
 </script>
 
 <style lang="stylus" scoped>
