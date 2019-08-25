@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import pangu from 'pangu'
 
-Vue.filter('spacing', text => pangu.spacing(text))
+Vue.filter('spacing', (text: string) => pangu.spacing(text))
 
-Vue.filter('format', timeStr => {
+Vue.filter('format', (timeStr: string) => {
   const time = new Date(timeStr)
 
   const now = new Date()

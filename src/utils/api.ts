@@ -1,20 +1,25 @@
 import ky from 'ky'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import categorize from './categorize'
+import { SearchParams } from '@/types'
 
 NProgress.configure({ showSpinner: false })
 
-export default async (url, searchParams) => {
+async function api<T>(
+  url: string | (() => string),
+  searchParams?: SearchParams
+) {
   NProgress.start()
 
-  const res = await ky(url, {
+  if (typeof url === 'function') url = url()
+  const res: T = await ky(url, {
     prefixUrl: '/api',
     searchParams
   }).json()
-  if (url.startsWith('jobs')) res.data = categorize(res.data)
 
   NProgress.done()
 
   return res
 }
+
+export { api }

@@ -1,10 +1,7 @@
 <template>
   <div>
-    <article v-if="brief.length" ref="toggle">
-      <h2
-        class="expandable"
-        @click="$refs.toggle.classList.toggle('expand-brief')"
-      >
+    <article v-if="brief">
+      <h2 class="expandable">
         行情简报
         <svg class="expand-icon" viewBox="0 0 24 24">
           <path
@@ -14,7 +11,7 @@
       </h2>
       <div class="collapse">
         <div class="columns">
-          <div class="column" v-for="{ date, positions } in brief" :key="date">
+          <div class="column" v-for="(positions, date) in brief" :key="date">
             <h3>{{ date }}</h3>
             <ul>
               <li
@@ -28,7 +25,7 @@
       </div>
     </article>
 
-    <article class="day" v-for="{ date, positions } in jobs" :key="date">
+    <article class="day" v-for="(positions, date) in jobs" :key="date">
       <h2>{{ date }}</h2>
       <section
         class="topic"
@@ -46,10 +43,7 @@
         :key="i"
         ref="refs"
       >
-        <h3
-          class="expandable"
-          @click="$refs.refs[i].classList.toggle('expand')"
-        >
+        <h3 class="expandable">
           {{ jobTitle | spacing }}
           <svg viewBox="0 0 24 24">
             <path
@@ -117,41 +111,55 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, onMounted } from '@vue/composition-api'
+<script lang="ts">
+import {
+  ref,
+  computed,
+  onMounted,
+  onUnmounted,
+  createComponent
+} from '@vue/composition-api'
 import pangu from 'pangu'
-import api from '../utils/api'
-import useInfiniteScroll from '../utils/infiniteScroll'
+import { api, useList, categorizeJobs, categorizeBrief } from '@/utils'
+import { last } from 'lodash-es'
+import { BasicData, Brief, UseList, Position, CategorizedData } from '@/types'
 
-export default {
+export default createComponent({
   setup() {
-    const brief = ref([])
-    const jobs = ref([])
-    const refs = ref(null)
-    const route = ref('jobs')
-    const lastCursor = computed(() =>
-      Date.parse([...[...jobs.value].pop().positions].pop().publishDate)
-    )
-    useInfiniteScroll(jobs, refs, route, lastCursor)
+    const brief = ref<CategorizedData<Brief>>({})
+    const lastCursor = () => Date.parse(last(topics.value)!.publishDate)
+    const { topics, refs } = useList('jobs', lastCursor) as UseList<Position>
+    const jobs = computed(() => categorizeJobs(topics.value))
 
-    const highlight = post =>
+    const highlight = (brief: Brief) =>
       pangu.spacing(
-        post.content
-          .split(post.jobTitle)
-          .join(` <strong>${post.jobTitle}</strong> `)
+        brief.content
+          .split(brief.jobTitle)
+          .join(` <strong>${brief.jobTitle}</strong> `)
       )
 
+    const expand = (e: MouseEvent) => {
+      const target = (e.target as Element).closest('.expandable')
+      if (target) target.classList.toggle('expand')
+    }
+
     onMounted(async () => {
-      ;({ data: brief.value } = await api('jobs/brief'))
-      ;({ data: jobs.value } = await api('jobs'))
+      const { data } = await api<BasicData<Brief>>('jobs/brief')
+      brief.value = categorizeBrief(data)
+
+      document.addEventListener('click', expand)
     })
+
+    onUnmounted(() => document.removeEventListener('click', expand))
 
     return { brief, jobs, refs, highlight }
   }
-}
+})
 </script>
 
 <style lang="stylus" scoped>
+timing = .5s
+
 .column h3
   margin-top 0
 
@@ -168,11 +176,10 @@ export default {
   svg
     width 24px
     vertical-align bottom
-    transition transform .3s
+    transition transform timing
 
-    .expand &
-    .expand-brief &
-      transform rotate(180deg)
+  &.expand svg
+    transform rotate(180deg)
 
   &:hover
     color theme
@@ -186,13 +193,11 @@ export default {
 .collapse
   max-height 0
   overflow hidden
-  transition max-height .3s
+  transition max-height timing
 
-  .expand &
-    max-height rem(320)
-
-  .expand-brief &
-    max-height rem(2500)
+  .expand ~ &
+    // Ensure brief is fully expanded
+    max-height 2500px
 
 h4 .meta
   font-weight initial

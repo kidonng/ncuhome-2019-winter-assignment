@@ -7,11 +7,11 @@
         </a>
       </h1>
       <router-link
-        v-for="(title, name) in categories"
+        v-for="{ name, meta } in categories"
         :to="{ name }"
         :key="name"
       >
-        {{ title }}
+        {{ meta }}
       </router-link>
     </nav>
 
@@ -19,11 +19,17 @@
   </div>
 </template>
 
-<script>
-import { categories } from './plugins/router'
+<script lang="ts">
+import { routes } from './plugins/router'
 
 export default {
-  data: () => ({ categories })
+  data: () => {
+    const categories = routes
+      .filter(({ name, meta }) => name !== 'topic' && meta)
+      .map(({ name, meta }) => ({ name, meta }))
+
+    return { categories }
+  }
 }
 </script>
 

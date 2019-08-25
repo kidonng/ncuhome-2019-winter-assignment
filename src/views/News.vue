@@ -38,29 +38,35 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, watch } from '@vue/composition-api'
-import api from '../utils/api'
-import useInfiniteScroll from '../utils/infiniteScroll'
+<script lang="ts">
+import { watch, createComponent } from '@vue/composition-api'
+import { api, useList } from '@/utils'
+import { last } from 'lodash-es'
+import { UseList, Data } from '@/types'
 
-export default {
+export default createComponent({
   setup(props, { root }) {
-    const topics = ref([])
-    const refs = ref(null)
-    const route = computed(() => root.$route.name)
-    const lastCursor = computed(() =>
-      Date.parse([...topics.value].pop().publishDate)
-    )
-    const observer = useInfiniteScroll(topics, refs, route, lastCursor)
+    const route = () => root.$route.name!
+    const lastCursor = () => Date.parse(last(topics.value)!.publishDate)
+    const { topics, refs, observer, total } = useList(
+      route,
+      lastCursor
+    ) as UseList<News>
 
-    watch(async () => {
-      observer.disconnect()
-      ;({ data: topics.value } = await api(root.$route.name))
-    })
+    watch(
+      route,
+      async () => {
+        observer.disconnect()
+        const { data, totalItems } = await api<Data<News>>(route)
+        topics.value = data
+        total.value = totalItems
+      },
+      { lazy: true }
+    )
 
     return { topics, refs }
   }
-}
+})
 </script>
 
 <style lang="stylus" scoped>
