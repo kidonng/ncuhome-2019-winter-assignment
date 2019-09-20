@@ -6471,22 +6471,17 @@ vue-loader@^15.7.0:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-router-ga-lite@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/vue-router-ga-lite/-/vue-router-ga-lite-0.1.3.tgz#bf207de1ce3fef4b0e4715eac03950344f6ee268"
-  integrity sha512-lrjYqLy3nWYe992Ct3jJoyXTrigdJgEDLrkgPlA6LQakFrh2B3P5Z+i4hatMbEbTF1KuSmz9AWibhoiaF4v0BQ==
+vue-router-ga-lite@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/vue-router-ga-lite/-/vue-router-ga-lite-0.2.0.tgz#543bf1e715c8a95bc50228305ff15c9d75cf17f9"
+  integrity sha512-rkhcYbqDwoXo7eW4pp1A0SVD1aoDa5QnJYa01En+B75NZ4GKgPmvPLjo9vCxySxbp4O58QmdKNZavYeumovpbg==
   dependencies:
     "@types/google.analytics" "^0.0.40"
     ga-lite "^2.0.1"
     vue "^2.6.10"
     vue-router "^3.1.2"
 
-vue-router@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.1.2.tgz#2e0904703545dabdd42b2b7a2e617f02f99a1969"
-  integrity sha512-WssQEHSEvIS1/CI4CO2T8LJdoK4Q9Ngox28K7FDNMTfzNTk2WS5D0dDlqYCaPG+AG4Z8wJkn1KrBc7AhspZJUQ==
-
-vue-router@^3.1.3:
+vue-router@^3.1.2, vue-router@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.1.3.tgz#e6b14fabc0c0ee9fda0e2cbbda74b350e28e412b"
   integrity sha512-8iSa4mGNXBjyuSZFCCO4fiKfvzqk+mhL0lnKuGcQtO1eoj8nq3CmbEG8FwK5QqoqwDgsjsf1GDuisDX4cdb/aQ==
