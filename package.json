@@ -26,7 +26,7 @@
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "type-fest": "^0.7.1",
-    "typescript": "^3.6.3",
+    "typescript": "^3.7.4",
     "vue-template-compiler": "^2.6.10"
   },
   "engines": {
