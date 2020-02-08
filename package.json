@@ -3,8 +3,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "now-dev": "yarn serve"
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "@vue/composition-api": "0.3.2",
