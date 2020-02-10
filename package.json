@@ -6,7 +6,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@vue/composition-api": "0.3.2",
+    "@vue/composition-api": "0.3.4",
     "ky": "0.17.0",
     "lodash-es": "4.17.15",
     "nprogress": "0.2.0",
