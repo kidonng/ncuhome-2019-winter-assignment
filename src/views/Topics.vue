@@ -21,12 +21,12 @@
 </template>
 
 <script lang="ts">
-import { onUnmounted, createComponent } from '@vue/composition-api'
+import { onUnmounted, defineComponent } from '@vue/composition-api'
 import { api, useList } from '@/utils'
 import { last } from 'lodash-es'
 import { Data, UseList } from '@/types'
 
-export default createComponent({
+export default defineComponent({
   setup() {
     const lastCursor = () => last(topics.value)!.order
     const { topics, refs } = useList('topic', lastCursor) as UseList<Topic>

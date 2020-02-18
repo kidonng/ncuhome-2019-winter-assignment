@@ -117,14 +117,14 @@ import {
   computed,
   onMounted,
   onUnmounted,
-  createComponent
+  defineComponent
 } from '@vue/composition-api'
 import pangu from 'pangu'
 import { api, useList, categorizeJobs, categorizeBrief } from '@/utils'
 import { last } from 'lodash-es'
 import { BasicData, Brief, UseList, Position, CategorizedData } from '@/types'
 
-export default createComponent({
+export default defineComponent({
   setup() {
     const brief = ref<CategorizedData<Brief>>({})
     const lastCursor = () => Date.parse(last(topics.value)!.publishDate)

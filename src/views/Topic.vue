@@ -35,11 +35,11 @@
 </template>
 
 <script lang="ts">
-import { ref, watch, createComponent } from '@vue/composition-api'
+import { ref, watch, defineComponent } from '@vue/composition-api'
 import pangu from 'pangu'
 import { api } from '@/utils'
 
-export default createComponent({
+export default defineComponent({
   setup(props, { root }) {
     const topic = ref<FullTopic>()
 

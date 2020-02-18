@@ -39,12 +39,12 @@
 </template>
 
 <script lang="ts">
-import { watch, createComponent } from '@vue/composition-api'
+import { watch, defineComponent } from '@vue/composition-api'
 import { api, useList } from '@/utils'
 import { last } from 'lodash-es'
 import { UseList, Data } from '@/types'
 
-export default createComponent({
+export default defineComponent({
   setup(props, { root }) {
     const route = () => root.$route.name!
     const lastCursor = () => Date.parse(last(topics.value)!.publishDate)
