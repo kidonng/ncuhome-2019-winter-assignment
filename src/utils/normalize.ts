@@ -1,9 +1,19 @@
 // Nouns to normalize
-const nouns = ['Java', 'UI', 'Web', 'PHP', 'Android', 'iOS', 'NET', 'Cocos2d']
-// Extra nouns
-nouns.push('SaaS', 'Golang', 'Linux')
+const nouns = [
+  'Java',
+  'UI',
+  'Web',
+  'PHP',
+  'Android',
+  'iOS',
+  'NET',
+  'Cocos2d',
+  // Extra
+  'SaaS',
+  'Golang',
+  'Linux'
+]
 const lowercaseNouns = nouns.map(noun => noun.toLowerCase())
-
 const re = RegExp(`(.*)(${nouns.join('|')})(.*)`, 'i')
 
 function normalize(str: string) {

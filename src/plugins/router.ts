@@ -1,11 +1,11 @@
 import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import VueRouter from 'vue-router'
 import Topics from '@/views/Topics.vue'
 
 Vue.use(VueRouter)
 
 const News = () => import(/* webpackChunkName: 'news' */ '../views/News.vue')
-const routes: RouteConfig[] = [
+const routes = [
   {
     name: 'topics',
     path: '/topics',
