@@ -23,12 +23,12 @@
 import { routes } from './plugins/router'
 
 export default {
-  data: () => {
-    const categories = routes
-      .filter(({ name, meta }) => name !== 'topic' && meta)
-      .map(({ name, meta }) => ({ name, meta }))
-
-    return { categories }
+  computed: {
+    categories() {
+      return routes
+        .filter(({ name, meta }) => name !== 'topic' && meta)
+        .map(({ name, meta }) => ({ name, meta }))
+    }
   }
 }
 </script>

@@ -1,14 +1,13 @@
 # Readhub
 
-[![Website status](https://img.shields.io/website/https/readhub.now.sh.svg)](https://readhub.now.sh/)
-[![License](https://img.shields.io/github/license/kidonng/readhub.svg)](LICENSE)
+[![MIT License](https://img.shields.io/github/license/kidonng/readhub.svg)](LICENSE)
 
-**DISCLAIMER** This project is for demonstration use only. Any content's copyright belongs to their owner.
+**DISCLAIMER:** This project is for demonstration only. Content on the site belongs to Readhub.
 
-Minimal [Readhub](https://readhub.cn/) mirror.
+Minimal [Readhub](https://readhub.cn/) copy.
 
 ## Development
 
-- Install dependencies `yarn` & `yarn global add now`
-- Run `now dev`
+- Install dependencies `yarn` & `yarn global add netlify-cli`
+- Run `netlify dev`
 - Build `yarn build`
