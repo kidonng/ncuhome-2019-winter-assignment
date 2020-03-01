@@ -1,5 +1,6 @@
-import { normalize } from '@/utils'
-import { Brief, CategorizedData, Position } from '@/types'
+import { normalize } from '@/utils/normalize'
+import { Brief, Position } from '@/types/jobs'
+import { CategorizedData } from '@/types/data'
 
 const categorizeJobs = (positions: Position[]) => {
   const data: CategorizedData<Position> = {}

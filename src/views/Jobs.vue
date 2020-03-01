@@ -120,9 +120,13 @@ import {
   defineComponent
 } from '@vue/composition-api'
 import pangu from 'pangu'
-import { api, useList, categorizeJobs, categorizeBrief } from '@/utils'
+import { api } from '@/utils/api'
+import { categorizeJobs, categorizeBrief } from '@/utils/categorize'
+import { useList } from '@/utils/list'
 import { last } from 'lodash-es'
-import { BasicData, Brief, UseList, Position, CategorizedData } from '@/types'
+import { BasicData, CategorizedData } from '@/types/data'
+import { Brief, Position } from '@/types/jobs'
+import { UseList } from '@/types/list'
 
 export default defineComponent({
   setup() {

@@ -1,7 +1,7 @@
 import ky from 'ky'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { SearchParams } from '@/types'
+import { SearchParams } from '@/types/data'
 
 NProgress.configure({ showSpinner: false })
 

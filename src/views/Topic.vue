@@ -37,7 +37,7 @@
 <script lang="ts">
 import { ref, watch, defineComponent } from '@vue/composition-api'
 import pangu from 'pangu'
-import { api } from '@/utils'
+import { api } from '@/utils/api'
 
 export default defineComponent({
   setup(props, { root }) {

@@ -1,7 +1,8 @@
 import { ref, watch, onMounted, onUnmounted } from '@vue/composition-api'
-import { api } from '@/utils'
+import { api } from '@/utils/api'
 import { last } from 'lodash-es'
-import { ListItem, ListData } from '@/types'
+import { ListItem } from '@/types/list'
+import { ListData } from '@/types/data'
 
 // TODO: Add correct return type
 function useList(

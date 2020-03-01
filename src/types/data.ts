@@ -1,4 +1,4 @@
-import { Position } from '@/types'
+import { Position } from '@/types/jobs'
 import { RequireAtLeastOne } from 'type-fest'
 
 interface BasicData<T> {

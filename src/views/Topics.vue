@@ -22,9 +22,11 @@
 
 <script lang="ts">
 import { onUnmounted, defineComponent } from '@vue/composition-api'
-import { api, useList } from '@/utils'
+import { api } from '@/utils/api'
+import { useList } from '@/utils/list'
 import { last } from 'lodash-es'
-import { Data, UseList } from '@/types'
+import { Data } from '@/types/data'
+import { UseList } from '@/types/list'
 
 export default defineComponent({
   setup() {

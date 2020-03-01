@@ -40,9 +40,11 @@
 
 <script lang="ts">
 import { watch, defineComponent } from '@vue/composition-api'
-import { api, useList } from '@/utils'
+import { api } from '@/utils/api'
+import { useList } from '@/utils/list'
 import { last } from 'lodash-es'
-import { UseList, Data } from '@/types'
+import { Data } from '@/types/data'
+import { UseList } from '@/types/list'
 
 export default defineComponent({
   setup(props, { root }) {
