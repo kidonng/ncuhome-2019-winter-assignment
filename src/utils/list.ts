@@ -1,15 +1,11 @@
 import { ref, watch, onMounted, onUnmounted } from '@vue/composition-api'
 import { api } from '@/utils/api'
 import { last } from 'lodash-es'
-import { ListItem } from '@/types/list'
-import { ListData } from '@/types/data'
+import { Input } from 'ky'
+import { DataType, Data } from '@/types/misc'
 
-// TODO: Add correct return type
-function useList(
-  route: Parameters<typeof api>[0],
-  lastCursor: () => number
-) {
-  const topics = ref<ListItem[]>([])
+function useList(route: Input | (() => Input), lastCursor: () => number) {
+  const topics = ref<DataType[]>([])
   const refs = ref<Element[]>([])
   const total = ref(0)
 
@@ -18,9 +14,10 @@ function useList(
       if (isIntersecting) {
         observer.unobserve(target)
 
-        const { data } = await api<ListData>(route, {
-          lastCursor: lastCursor()
-        })
+        if (typeof route === 'function') route = route()
+        const { data } = await api(route, {
+          searchParams: { lastCursor: lastCursor() }
+        }).json<Data<DataType>>()
 
         topics.value.push(...data)
       }
@@ -31,12 +28,12 @@ function useList(
     if (refs.value.length < total.value) observer.observe(last(refs.value)!)
   })
 
-  onMounted(
-    async () =>
-      ({ data: topics.value, totalItems: total.value } = await api<ListData>(
-        route
-      ))
-  )
+  onMounted(async () => {
+    if (typeof route === 'function') route = route()
+    const { data, totalItems } = await api(route).json<Data<DataType>>()
+    topics.value = data
+    total.value = totalItems
+  })
 
   onUnmounted(() => observer.disconnect())
 

@@ -1,25 +1,24 @@
 import ky from 'ky'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { SearchParams } from '@/types/data'
 
 NProgress.configure({ showSpinner: false })
 
-async function api<T>(
-  url: string | (() => string),
-  searchParams?: SearchParams
-) {
-  NProgress.start()
-
-  if (typeof url === 'function') url = url()
-  const res: T = await ky(url, {
-    prefixUrl: '/api',
-    searchParams
-  }).json()
-
-  NProgress.done()
-
-  return res
-}
+// searchParams: Record<'latestCursor' | 'lastCursor' | 'pageSize', number>
+const api = ky.extend({
+  prefixUrl: '/api',
+  hooks: {
+    beforeRequest: [
+      () => {
+        NProgress.start()
+      }
+    ],
+    afterResponse: [
+      () => {
+        NProgress.done()
+      }
+    ]
+  }
+})
 
 export { api }

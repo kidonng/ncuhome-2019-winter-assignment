@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { ga } from 'vue-router-ga-lite'
 import Topics from '@/views/Topics.vue'
 
 Vue.use(VueRouter)
@@ -58,6 +59,8 @@ const router = new VueRouter({
 router.afterEach(({ meta }) => {
   if (meta) document.title = `Readhub - ${meta}`
 })
+
+ga('UA-140053908-2', router)
 
 export default router
 export { routes }

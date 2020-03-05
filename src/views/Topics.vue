@@ -25,8 +25,7 @@ import { onUnmounted, defineComponent } from '@vue/composition-api'
 import { api } from '@/utils/api'
 import { useList } from '@/utils/list'
 import { last } from 'lodash-es'
-import { Data } from '@/types/data'
-import { UseList } from '@/types/list'
+import { Data, UseList } from '@/types/misc'
 
 export default defineComponent({
   setup() {
@@ -35,12 +34,14 @@ export default defineComponent({
 
     // Refresh topics
     const refresh = setInterval(async () => {
-      const { count } = await api<NewTopicCount>('topic/newCount', {
-        latestCursor: topics.value[0].order
-      })
+      const { count } = await api('topic/newCount', {
+        searchParams: { latestCursor: topics.value[0].order }
+      }).json<NewTopicCount>()
 
       if (count) {
-        const { data } = await api<Data<Topic>>('topic', { pageSize: count })
+        const { data } = await api('topic', {
+          searchParams: { pageSize: count }
+        }).json<Data<Topic>>()
 
         topics.value = [...data, ...topics.value]
       }

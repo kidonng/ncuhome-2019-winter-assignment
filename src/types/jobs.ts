@@ -34,5 +34,3 @@ interface Brief {
   date: string
   jobTitle: string
 }
-
-export { Position, Brief }

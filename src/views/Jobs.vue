@@ -124,9 +124,7 @@ import { api } from '@/utils/api'
 import { categorizeJobs, categorizeBrief } from '@/utils/categorize'
 import { useList } from '@/utils/list'
 import { last } from 'lodash-es'
-import { BasicData, CategorizedData } from '@/types/data'
-import { Brief, Position } from '@/types/jobs'
-import { UseList } from '@/types/list'
+import { BasicData, CategorizedData, UseList } from '@/types/misc'
 
 export default defineComponent({
   setup() {
@@ -148,7 +146,7 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      const { data } = await api<BasicData<Brief>>('jobs/brief')
+      const { data } = await api('jobs/brief').json<BasicData<Brief>>()
       brief.value = categorizeBrief(data)
 
       document.addEventListener('click', expand)

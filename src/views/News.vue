@@ -43,8 +43,7 @@ import { watch, defineComponent } from '@vue/composition-api'
 import { api } from '@/utils/api'
 import { useList } from '@/utils/list'
 import { last } from 'lodash-es'
-import { Data } from '@/types/data'
-import { UseList } from '@/types/list'
+import { Data, UseList } from '@/types/misc'
 
 export default defineComponent({
   setup(props, { root }) {
@@ -59,7 +58,7 @@ export default defineComponent({
       route,
       async () => {
         observer.disconnect()
-        const { data, totalItems } = await api<Data<News>>(route)
+        const { data, totalItems } = await api(route()).json<Data<News>>()
         topics.value = data
         total.value = totalItems
       },

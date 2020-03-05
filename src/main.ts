@@ -1,9 +1,10 @@
 import Vue from 'vue'
-import './plugins/composition-api'
+import VueCompositionApi from '@vue/composition-api'
 import './plugins/filters'
-import './plugins/analytics'
 import router from './plugins/router'
 import App from './App.vue'
+
+Vue.use(VueCompositionApi)
 
 new Vue({
   router,

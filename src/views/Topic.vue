@@ -44,9 +44,9 @@ export default defineComponent({
     const topic = ref<FullTopic>()
 
     watch(async () => {
-      const { timeline, ...data } = await api<FullTopic>(
+      const { timeline, ...data } = await api(
         `topic/${root.$route.params.id}`
-      )
+      ).json<FullTopic>()
 
       // Remove current topic
       if (timeline && timeline.topics) timeline.topics.shift()
