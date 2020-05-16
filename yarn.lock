@@ -3601,10 +3601,10 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
-ky@0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/ky/-/ky-0.19.0.tgz#d6ad117e89efe2d85a1c2e91462d48ca1cda1f7a"
-  integrity sha512-RkDgbg5ahMv1MjHfJI2WJA2+Qbxq0iNSLWhreYiCHeHry9Q12sedCnP5KYGPt7sydDvsyH+8UcG6Kanq5mpsyw==
+ky@0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-0.20.0.tgz#4cebcd208f2d0d0b5970a63523afecfd79bd9e46"
+  integrity sha512-JAfwtwj+t7WqRus88PfBj25aAjRQUgMhk7aB2ufjQ6v8faoNwMy02mfSQ0iNXWCbJGcSl2JZ5ckaiywRjbq0Uw==
 
 launch-editor-middleware@^2.2.1:
   version "2.2.1"
