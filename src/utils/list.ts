@@ -1,8 +1,8 @@
-import { ref, watch, onMounted, onUnmounted } from '@vue/composition-api'
-import { api } from '@/utils/api'
-import { last } from 'lodash-es'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { api } from '../utils/api'
+import last from 'lodash-es/last'
 import { Input } from 'ky'
-import { DataType, Data } from '@/types/misc'
+import { DataType, Data } from '../types/misc'
 
 function useList(route: Input | (() => Input), lastCursor: () => number) {
   const topics = ref<DataType[]>([])
@@ -16,7 +16,7 @@ function useList(route: Input | (() => Input), lastCursor: () => number) {
 
         if (typeof route === 'function') route = route()
         const { data } = await api(route, {
-          searchParams: { lastCursor: lastCursor() }
+          searchParams: { lastCursor: lastCursor() },
         }).json<Data<DataType>>()
 
         topics.value.push(...data)
@@ -24,7 +24,7 @@ function useList(route: Input | (() => Input), lastCursor: () => number) {
     }
   )
 
-  watch(() => {
+  watch(refs, () => {
     if (refs.value.length < total.value) observer.observe(last(refs.value)!)
   })
 

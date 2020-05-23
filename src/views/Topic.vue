@@ -1,9 +1,9 @@
 <template>
   <article v-if="topic">
-    <h2>{{ topic.title | spacing }}</h2>
-    <time class="meta">{{ topic.createdAt | format }}</time>
+    <h2>{{ spacing(topic.title) }}</h2>
+    <time class="meta">{{ format(topic.createdAt) }}</time>
     <div class="summary">
-      {{ topic.summary | spacing }}
+      {{ spacing(topic.summary) }}
     </div>
 
     <section>
@@ -11,7 +11,7 @@
       <ul>
         <li v-for="{ url, title, siteName } in topic.newsArray" :key="url">
           <a :href="url">
-            {{ title | spacing }}
+            {{ spacing(title) }}
           </a>
           <span class="meta">{{ siteName }}</span>
         </li>
@@ -25,9 +25,9 @@
       <ul class="timeline">
         <li v-for="{ id, title, createdAt } in topic.timeline.topics" :key="id">
           <router-link :to="{ name: 'topic', params: { id } }">
-            {{ title | spacing }}
+            {{ spacing(title) }}
           </router-link>
-          <span class="meta">{{ createdAt | format }}</span>
+          <span class="meta">{{ format(createdAt) }}</span>
         </li>
       </ul>
     </section>
@@ -35,32 +35,39 @@
 </template>
 
 <script lang="ts">
-import { ref, watch, defineComponent } from '@vue/composition-api'
-import pangu from 'pangu'
-import { api } from '@/utils/api'
+import { ref, watch, defineComponent } from 'vue'
+import { api } from '../utils/api'
+import { router } from '../plugins/router'
+import { spacing, format } from '../plugins/filters'
 
 export default defineComponent({
-  setup(props, { root }) {
+  setup() {
     const topic = ref<FullTopic>()
 
-    watch(async () => {
-      const { timeline, ...data } = await api(
-        `topic/${root.$route.params.id}`
-      ).json<FullTopic>()
+    watch(
+      router.currentRoute,
+      async ({ params }) => {
+        const { timeline, ...data } = await api(`topic/${params.id}`).json<
+          FullTopic
+        >()
 
-      // Remove current topic
-      if (timeline && timeline.topics) timeline.topics.shift()
+        // Remove current topic
+        if (timeline && timeline.topics) timeline.topics.shift()
 
-      topic.value = { timeline, ...data }
-      document.title = `${pangu.spacing(data.title)} - Readhub`
-    })
+        topic.value = { timeline, ...data }
+        document.title = `${spacing(data.title)} - Readhub`
+      },
+      { immediate: true }
+    )
 
-    return { topic }
+    return { topic, spacing, format }
   }
 })
 </script>
 
 <style lang="stylus" scoped>
+@import '../variables'
+
 .summary
   margin-top xxs
 

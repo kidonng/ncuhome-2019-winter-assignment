@@ -1,66 +1,26 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import { ga } from 'vue-router-ga-lite'
-import Topics from '@/views/Topics.vue'
+import { createRouter, createWebHistory } from 'vue-router'
+// TODO: Add analytics
 
-Vue.use(VueRouter)
-
-const News = () => import(/* webpackChunkName: 'news' */ '../views/News.vue')
-const routes = [
-  {
-    name: 'topics',
-    path: '/topics',
-    meta: '热门',
-    component: Topics
-  },
-  {
-    name: 'topic',
-    path: '/topic/:id',
-    meta: '话题',
-    component: () =>
-      import(/* webpackChunkName: 'topic' */ '../views/Topic.vue')
-  },
-  {
-    name: 'news',
-    path: '/news',
-    meta: '科技',
-    component: News
-  },
-  {
-    name: 'technews',
-    path: '/tech',
-    meta: '开发',
-    component: News
-  },
-  {
-    name: 'blockchain',
-    path: '/blockchain',
-    meta: '区块',
-    component: News
-  },
-  {
-    name: 'jobs',
-    path: '/jobs',
-    meta: '招聘',
-    component: () => import(/* webpackChunkName: 'jobs' */ '../views/Jobs.vue')
-  },
-  {
-    path: '*',
-    redirect: { name: 'topics' }
-  }
-]
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes,
-  scrollBehavior: () => ({ x: 0, y: 0 })
+export const router = createRouter({
+  history: createWebHistory(),
+  strict: true,
+  routes: [
+    {
+      name: 'topics',
+      path: '/topics',
+      meta: { title: '热门' },
+      component: () => import('../views/Topics.vue'),
+    },
+    {
+      name: 'topic',
+      path: '/topic/:id',
+      meta: { title: '话题' },
+      component: () => import('../views/Topic.vue'),
+    },
+  ],
+  scrollBehavior: () => ({ x: 0, y: 0 }),
 })
 
 router.afterEach(({ meta }) => {
-  if (meta) document.title = `Readhub - ${meta}`
+  if (meta) document.title = `Readhub - ${meta.title}`
 })
-
-ga('UA-140053908-2', router)
-
-export default router
-export { routes }

@@ -1,5 +1,5 @@
-import { normalize } from '@/utils/normalize'
-import { CategorizedData } from '@/types/misc'
+import { normalize } from '../utils/normalize'
+import { CategorizedData } from '../types/misc'
 
 const categorizeJobs = (positions: Position[]) =>
   positions.reduce((data, position) => {

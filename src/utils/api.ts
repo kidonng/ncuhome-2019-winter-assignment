@@ -1,6 +1,6 @@
 import ky from 'ky'
 import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
+import 'nprogress/css/nprogress.css'
 
 NProgress.configure({ showSpinner: false })
 
@@ -11,14 +11,14 @@ const api = ky.extend({
     beforeRequest: [
       () => {
         NProgress.start()
-      }
+      },
     ],
     afterResponse: [
       () => {
         NProgress.done()
-      }
-    ]
-  }
+      },
+    ],
+  },
 })
 
 export { api }

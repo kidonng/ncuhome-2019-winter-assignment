@@ -1,9 +1,8 @@
-import Vue from 'vue'
-import pangu from 'pangu'
+import pangu from 'https://cdn.pika.dev/pangu@4.0.7'
 
-Vue.filter('spacing', (text: string) => pangu.spacing(text))
+export const spacing = (text: string) => pangu.spacing(text)
 
-Vue.filter('format', (timeStr: string) => {
+export const format = (timeStr: string) => {
   const time = new Date(timeStr)
 
   const now = new Date()
@@ -21,6 +20,7 @@ Vue.filter('format', (timeStr: string) => {
   else if (time.getFullYear() === now.getFullYear())
     return `${time.getMonth() + 1} 月 ${time.getDate()} 日`
   else
-    return `${time.getFullYear()} 年 ${time.getMonth() +
-      1} 月 ${time.getDate()} 日`
-})
+    return `${time.getFullYear()} 年 ${
+      time.getMonth() + 1
+    } 月 ${time.getDate()} 日`
+}

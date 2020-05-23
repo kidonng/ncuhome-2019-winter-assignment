@@ -2,30 +2,31 @@
   <div>
     <article
       class="topic"
-      v-for="{ id, title, createdAt, summary } in topics"
+      v-for="({ id, title, createdAt, summary }, i) in topics"
       :key="id"
-      ref="refs"
+      :ref="(el) => (refs[i] = el)"
     >
       <h2>
         <router-link :to="{ name: 'topic', params: { id } }">
-          {{ title | spacing }}
+          {{ spacing(title) }}
         </router-link>
-        <time class="meta">{{ createdAt | format }}</time>
+        <time class="meta">{{ format(createdAt) }}</time>
       </h2>
 
       <div class="summary">
-        {{ summary | spacing }}
+        {{ spacing(summary) }}
       </div>
     </article>
   </div>
 </template>
 
 <script lang="ts">
-import { onUnmounted, defineComponent } from '@vue/composition-api'
-import { api } from '@/utils/api'
-import { useList } from '@/utils/list'
-import { last } from 'lodash-es'
-import { Data, UseList } from '@/types/misc'
+import { onUnmounted, defineComponent } from 'vue'
+import { api } from '../utils/api'
+import { useList } from '../utils/list'
+import last from 'lodash-es/last'
+import { spacing, format } from '../plugins/filters'
+import { Data, UseList } from '../types/misc'
 
 export default defineComponent({
   setup() {
@@ -35,12 +36,12 @@ export default defineComponent({
     // Refresh topics
     const refresh = setInterval(async () => {
       const { count } = await api('topic/newCount', {
-        searchParams: { latestCursor: topics.value[0].order }
+        searchParams: { latestCursor: topics.value[0].order },
       }).json<NewTopicCount>()
 
       if (count) {
         const { data } = await api('topic', {
-          searchParams: { pageSize: count }
+          searchParams: { pageSize: count },
         }).json<Data<Topic>>()
 
         topics.value = [...data, ...topics.value]
@@ -49,12 +50,14 @@ export default defineComponent({
 
     onUnmounted(() => clearInterval(refresh))
 
-    return { topics, refs }
-  }
+    return { topics, refs, spacing, format }
+  },
 })
 </script>
 
 <style lang="stylus" scoped>
+@import '../variables'
+
 .meta
   font-weight initial
   margin-left xxs
