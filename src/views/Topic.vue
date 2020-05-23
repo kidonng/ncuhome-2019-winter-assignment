@@ -46,22 +46,24 @@ export default defineComponent({
 
     watch(
       router.currentRoute,
-      async ({ params }) => {
-        const { timeline, ...data } = await api(`topic/${params.id}`).json<
-          FullTopic
-        >()
+      async (route) => {
+        if (route) {
+          const { timeline, ...data } = await api(
+            `topic/${route.params.id}`
+          ).json<FullTopic>()
 
-        // Remove current topic
-        if (timeline && timeline.topics) timeline.topics.shift()
+          // Remove current topic
+          if (timeline && timeline.topics) timeline.topics.shift()
 
-        topic.value = { timeline, ...data }
-        document.title = `${spacing(data.title)} - Readhub`
+          topic.value = { timeline, ...data }
+          document.title = `${spacing(data.title)} - Readhub`
+        }
       },
       { immediate: true }
     )
 
     return { topic, spacing, format }
-  }
+  },
 })
 </script>
 

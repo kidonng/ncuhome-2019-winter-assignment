@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// TODO: Add analytics
+// TODO: import { ga } from 'vue-router-ga-lite'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -17,6 +17,10 @@ export const router = createRouter({
       meta: { title: '话题' },
       component: () => import('../views/Topic.vue'),
     },
+    {
+      path: '/',
+      redirect: 'topics',
+    },
   ],
   scrollBehavior: () => ({ x: 0, y: 0 }),
 })
@@ -24,3 +28,5 @@ export const router = createRouter({
 router.afterEach(({ meta }) => {
   if (meta) document.title = `Readhub - ${meta.title}`
 })
+
+// TODO: ga('UA-140053908-2', router)

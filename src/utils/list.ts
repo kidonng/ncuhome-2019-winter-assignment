@@ -24,7 +24,7 @@ function useList(route: Input | (() => Input), lastCursor: () => number) {
     }
   )
 
-  watch(refs, () => {
+  watch(topics, () => {
     if (refs.value.length < total.value) observer.observe(last(refs.value)!)
   })
 
