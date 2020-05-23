@@ -1,5 +1,5 @@
-import { useList } from '@/utils/list'
-import { Ref } from '@vue/composition-api'
+import { useList } from '../utils/list'
+import { Ref } from 'vue'
 
 type DataType = Topic | News | Position
 

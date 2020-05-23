@@ -37,14 +37,18 @@
           salaryLower,
           salaryUpper,
           experienceLower,
-          experienceUpper
+          experienceUpper,
         },
         i) in positions"
         :key="i"
-        ref="refs"
+        :ref="
+          (el) => {
+            if (i === topics.length - 1) lastItem = el
+          }
+        "
       >
         <h3 class="expandable">
-          {{ jobTitle | spacing }}
+          {{ spacing(jobTitle) }}
           <svg viewBox="0 0 24 24">
             <path
               d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
@@ -52,7 +56,7 @@
           </svg>
         </h3>
         <div class="meta">
-          {{ jobsArray.map(job => job.title).join('・') | spacing }}
+          {{ spacing(jobsArray.map((job) => job.title).join('・')) }}
         </div>
         <div class="summary">
           {{ Object.keys(cities)[0] }}、{{ Object.keys(cities)[1] }}等地共更新了
@@ -73,13 +77,13 @@
               experienceLower,
               experienceUpper,
               city,
-              siteName
+              siteName,
             } in jobsArray"
             :key="url"
           >
             <h4>
               <a :href="url">
-                {{ title | spacing }}
+                {{ spacing(title) }}
               </a>
               <span class="meta">
                 {{ sponsor ? `${company}（赞助商）` : company }}
@@ -112,29 +116,27 @@
 </template>
 
 <script lang="ts">
-import {
-  ref,
-  computed,
-  onMounted,
-  onUnmounted,
-  defineComponent
-} from '@vue/composition-api'
-import pangu from 'pangu'
-import { api } from '@/utils/api'
-import { categorizeJobs, categorizeBrief } from '@/utils/categorize'
-import { useList } from '@/utils/list'
-import { last } from 'lodash-es'
-import { BasicData, CategorizedData, UseList } from '@/types/misc'
+import { ref, computed, onMounted, onUnmounted, defineComponent } from 'vue'
+import { api } from '../utils/api'
+import { categorizeJobs, categorizeBrief } from '../utils/categorize'
+import { useList } from '../utils/list'
+import last from 'lodash-es/last'
+import { BasicData, CategorizedData, UseList } from '../types/misc'
+import { spacing } from '../plugins/filters'
 
 export default defineComponent({
   setup() {
     const brief = ref<CategorizedData<Brief>>({})
-    const lastCursor = () => Date.parse(last(topics.value)!.publishDate)
-    const { topics, refs } = useList('jobs', lastCursor) as UseList<Position>
+    const lastCursor = computed(() =>
+      Date.parse(last(topics.value).publishDate)
+    )
+    const { topics, lastItem } = useList('jobs', lastCursor) as UseList<
+      Position
+    >
     const jobs = computed(() => categorizeJobs(topics.value))
 
     const highlight = (brief: Brief) =>
-      pangu.spacing(
+      spacing(
         brief.content
           .split(brief.jobTitle)
           .join(` <strong>${brief.jobTitle}</strong> `)
@@ -154,12 +156,14 @@ export default defineComponent({
 
     onUnmounted(() => document.removeEventListener('click', expand))
 
-    return { brief, jobs, refs, highlight }
-  }
+    return { brief, jobs, lastItem, highlight, spacing }
+  },
 })
 </script>
 
 <style lang="stylus" scoped>
+@import '../variables'
+
 timing = .5s
 
 .column h3

@@ -11,12 +11,12 @@ const nouns = [
   // Extra
   'SaaS',
   'Golang',
-  'Linux'
+  'Linux',
 ]
-const lowercaseNouns = nouns.map(noun => noun.toLowerCase())
+const lowercaseNouns = nouns.map((noun) => noun.toLowerCase())
 const re = RegExp(`(.*)(${nouns.join('|')})(.*)`, 'i')
 
-function normalize(str: string) {
+export function normalize(str: string) {
   const groups = str.match(re)
 
   if (groups) {
@@ -28,5 +28,3 @@ function normalize(str: string) {
 
   return str
 }
-
-export { normalize }

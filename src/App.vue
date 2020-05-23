@@ -7,11 +7,11 @@
         </a>
       </h1>
       <router-link
-        v-for="{ name, meta } in categories"
+        v-for="{ name, title } in categories"
         :to="{ name }"
         :key="name"
       >
-        {{ meta }}
+        {{ title }}
       </router-link>
     </nav>
 
@@ -20,20 +20,24 @@
 </template>
 
 <script lang="ts">
-import { routes } from './plugins/router'
+import { router } from './plugins/router'
 
 export default {
-  computed: {
-    categories() {
-      return routes
-        .filter(({ name, meta }) => name !== 'topic' && meta)
-        .map(({ name, meta }) => ({ name, meta }))
-    }
-  }
+  name: 'App',
+  setup() {
+    const categories = router
+      .getRoutes()
+      .filter(({ name, meta }) => name !== 'topic' && meta)
+      .map(({ name, meta: { title } }) => ({ name, title }))
+
+    return { categories }
+  },
 }
 </script>
 
 <style lang="stylus">
+@import './variables'
+
 body
   line-height 1.5
   margin m auto
