@@ -37,6 +37,12 @@ export const router = createRouter({
       component: News,
     },
     {
+      name: 'jobs',
+      path: '/jobs',
+      meta: { title: '招聘' },
+      component: () => import('../views/Jobs.vue'),
+    },
+    {
       path: '/',
       redirect: 'topics',
     },
