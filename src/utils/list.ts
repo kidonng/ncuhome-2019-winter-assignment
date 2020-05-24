@@ -1,22 +1,39 @@
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import {
+  ref,
+  watch,
+  onMounted,
+  onUnmounted,
+  Ref,
+  isRef,
+  ComputedRef,
+} from 'vue'
 import { api } from '../utils/api'
-import last from 'lodash-es/last'
 import { Input } from 'ky'
 import { DataType, Data } from '../types/misc'
 
-function useList(route: Input | (() => Input), lastCursor: () => number) {
+export function useList(
+  route: Input | Ref<Input>,
+  lastCursor: ComputedRef<number>
+) {
   const topics = ref<DataType[]>([])
-  const refs = ref<Element[]>([])
+  const lastItem = ref<HTMLElement>()
   const total = ref(0)
+
+  const loadMore = async () => {
+    const { data, totalItems } = await api(
+      isRef(route) ? route.value : route
+    ).json<Data<DataType>>()
+    topics.value = data
+    total.value = totalItems
+  }
 
   const observer = new IntersectionObserver(
     async ([{ isIntersecting, target }]) => {
       if (isIntersecting) {
         observer.unobserve(target)
 
-        if (typeof route === 'function') route = route()
-        const { data } = await api(route, {
-          searchParams: { lastCursor: lastCursor() },
+        const { data } = await api(isRef(route) ? route.value : route, {
+          searchParams: { lastCursor: lastCursor.value },
         }).json<Data<DataType>>()
 
         topics.value.push(...data)
@@ -24,20 +41,16 @@ function useList(route: Input | (() => Input), lastCursor: () => number) {
     }
   )
 
-  watch(topics, () => {
-    if (refs.value.length < total.value) observer.observe(last(refs.value)!)
-  })
+  watch(
+    () => topics.value.length,
+    () => {
+      if (topics.value.length < total.value) observer.observe(lastItem.value)
+    }
+  )
 
-  onMounted(async () => {
-    if (typeof route === 'function') route = route()
-    const { data, totalItems } = await api(route).json<Data<DataType>>()
-    topics.value = data
-    total.value = totalItems
-  })
+  onMounted(loadMore)
 
   onUnmounted(() => observer.disconnect())
 
-  return { topics, refs, observer, total }
+  return { topics, lastItem, observer, loadMore }
 }
-
-export { useList }

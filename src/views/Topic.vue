@@ -41,6 +41,7 @@ import { router } from '../plugins/router'
 import { spacing, format } from '../plugins/filters'
 
 export default defineComponent({
+  name: 'Topic',
   setup() {
     const topic = ref<FullTopic>()
 

@@ -5,7 +5,7 @@ import 'nprogress/css/nprogress.css'
 NProgress.configure({ showSpinner: false })
 
 // searchParams: Record<'latestCursor' | 'lastCursor' | 'pageSize', number>
-const api = ky.extend({
+export const api = ky.extend({
   prefixUrl: '/api',
   hooks: {
     beforeRequest: [
@@ -20,5 +20,3 @@ const api = ky.extend({
     ],
   },
 })
-
-export { api }

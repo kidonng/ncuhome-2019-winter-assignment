@@ -4,7 +4,11 @@
       class="topic"
       v-for="({ id, title, createdAt, summary }, i) in topics"
       :key="id"
-      :ref="(el) => (refs[i] = el)"
+      :ref="
+        (el) => {
+          if (i === topics.length - 1) lastItem = el
+        }
+      "
     >
       <h2>
         <router-link :to="{ name: 'topic', params: { id } }">
@@ -21,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { onUnmounted, defineComponent } from 'vue'
+import { onUnmounted, defineComponent, computed } from 'vue'
 import { api } from '../utils/api'
 import { useList } from '../utils/list'
 import last from 'lodash-es/last'
@@ -29,9 +33,10 @@ import { spacing, format } from '../plugins/filters'
 import { Data, UseList } from '../types/misc'
 
 export default defineComponent({
+  name: 'Topics',
   setup() {
-    const lastCursor = () => last(topics.value)!.order
-    const { topics, refs } = useList('topic', lastCursor) as UseList<Topic>
+    const lastCursor = computed(() => last(topics.value).order)
+    const { topics, lastItem } = useList('topic', lastCursor) as UseList<Topic>
 
     // Refresh topics
     const refresh = setInterval(async () => {
@@ -50,7 +55,7 @@ export default defineComponent({
 
     onUnmounted(() => clearInterval(refresh))
 
-    return { topics, refs, spacing, format }
+    return { topics, lastItem, spacing, format }
   },
 })
 </script>

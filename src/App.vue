@@ -23,13 +23,14 @@
 import { router } from './plugins/router'
 
 export default {
-  computed: {
-    categories() {
-      return router
-        .getRoutes()
-        .filter(({ name, meta }) => name !== 'topic' && meta)
-        .map(({ name, meta: { title } }) => ({ name, title }))
-    },
+  name: 'App',
+  setup() {
+    const categories = router
+      .getRoutes()
+      .filter(({ name, meta }) => name !== 'topic' && meta)
+      .map(({ name, meta: { title } }) => ({ name, title }))
+
+    return { categories }
   },
 }
 </script>

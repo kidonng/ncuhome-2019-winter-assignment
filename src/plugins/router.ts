@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 // TODO: import { ga } from 'vue-router-ga-lite'
 
+const News = () => import('../views/News.vue')
 export const router = createRouter({
   history: createWebHistory(),
   strict: true,
@@ -16,6 +17,24 @@ export const router = createRouter({
       path: '/topic/:id',
       meta: { title: '话题' },
       component: () => import('../views/Topic.vue'),
+    },
+    {
+      name: 'news',
+      path: '/news',
+      meta: { title: '科技' },
+      component: News,
+    },
+    {
+      name: 'technews',
+      path: '/tech',
+      meta: { title: '开发' },
+      component: News,
+    },
+    {
+      name: 'blockchain',
+      path: '/blockchain',
+      meta: { title: '区块' },
+      component: News,
     },
     {
       path: '/',
