@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { ref, watch, defineComponent } from 'vue'
+import { ref, computed, watchEffect, defineComponent } from 'vue'
 import { api } from '../utils/api'
 import { router } from '../plugins/router'
 import { spacing, format } from '../plugins/filters'
@@ -45,23 +45,18 @@ export default defineComponent({
   setup() {
     const topic = ref<FullTopic>()
 
-    watch(
-      router.currentRoute,
-      async (route) => {
-        if (route) {
-          const { timeline, ...data } = await api(
-            `topic/${route.params.id}`
-          ).json<FullTopic>()
+    watchEffect(async () => {
+      const route = computed(
+        () => `topic/${router.currentRoute.value.params.id}`
+      )
+      const { timeline, ...data } = await api(route.value).json<FullTopic>()
 
-          // Remove current topic
-          if (timeline && timeline.topics) timeline.topics.shift()
+      // Remove current topic
+      if (timeline?.topics) timeline.topics.shift()
+      topic.value = { timeline, ...data }
 
-          topic.value = { timeline, ...data }
-          document.title = `${spacing(data.title)} - Readhub`
-        }
-      },
-      { immediate: true }
-    )
+      document.title = `${spacing(data.title)} - Readhub`
+    })
 
     return { topic, spacing, format }
   },
