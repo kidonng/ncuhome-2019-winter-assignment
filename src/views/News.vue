@@ -37,10 +37,10 @@
 </template>
 
 <script lang="ts">
-import { watch, defineComponent, computed, ComputedRef } from 'vue'
+import { watchEffect, defineComponent, computed, ComputedRef } from 'vue'
 import { api } from '../utils/api'
 import { useList } from '../utils/list'
-import last from 'lodash-es/last'
+import {last} from 'lodash-es'
 import { Data, UseList } from '../types/misc'
 import { router } from '../plugins/router'
 import { spacing, format } from '../plugins/filters'
@@ -54,20 +54,14 @@ export default defineComponent({
     const lastCursor = computed(() =>
       Date.parse(last(topics.value).publishDate)
     )
-    const { topics, lastItem, observer, loadMore } = useList(
+    const { topics, lastItem, observer, load } = useList(
       route,
       lastCursor
     ) as UseList<News>
 
-    watch(route, async () => {
-      if (
-        route.value === 'news' ||
-        route.value === 'technews' ||
-        route.value === 'blockchain'
-      ) {
-        observer.disconnect()
-        loadMore()
-      }
+    watchEffect(async () => {
+      observer.disconnect()
+      load()
     })
 
     return { topics, lastItem, spacing, format }

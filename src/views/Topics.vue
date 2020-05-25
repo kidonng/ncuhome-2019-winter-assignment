@@ -25,10 +25,10 @@
 </template>
 
 <script lang="ts">
-import { onUnmounted, defineComponent, computed } from 'vue'
+import { onMounted, onUnmounted, defineComponent, computed } from 'vue'
 import { api } from '../utils/api'
 import { useList } from '../utils/list'
-import last from 'lodash-es/last'
+import { last } from 'lodash-es'
 import { spacing, format } from '../plugins/filters'
 import { Data, UseList } from '../types/misc'
 
@@ -36,7 +36,11 @@ export default defineComponent({
   name: 'Topics',
   setup() {
     const lastCursor = computed(() => last(topics.value).order)
-    const { topics, lastItem } = useList('topic', lastCursor) as UseList<Topic>
+    const { topics, lastItem, load } = useList('topic', lastCursor) as UseList<
+      Topic
+    >
+
+    onMounted(load)
 
     // Refresh topics
     const refresh = setInterval(async () => {
