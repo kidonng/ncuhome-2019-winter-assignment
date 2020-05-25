@@ -1,12 +1,4 @@
-import {
-  ref,
-  watch,
-  onMounted,
-  onUnmounted,
-  Ref,
-  isRef,
-  ComputedRef,
-} from 'vue'
+import { ref, watchEffect, onUnmounted, Ref, unref, ComputedRef } from 'vue'
 import { api } from '../utils/api'
 import { Input } from 'ky'
 import { DataType, Data } from '../types/misc'
@@ -19,10 +11,8 @@ export function useList(
   const lastItem = ref<HTMLElement>()
   const total = ref(0)
 
-  const loadMore = async () => {
-    const { data, totalItems } = await api(
-      isRef(route) ? route.value : route
-    ).json<Data<DataType>>()
+  const load = async () => {
+    const { data, totalItems } = await api(unref(route)).json<Data<DataType>>()
     topics.value = data
     total.value = totalItems
   }
@@ -32,7 +22,7 @@ export function useList(
       if (isIntersecting) {
         observer.unobserve(target)
 
-        const { data } = await api(isRef(route) ? route.value : route, {
+        const { data } = await api(unref(route), {
           searchParams: { lastCursor: lastCursor.value },
         }).json<Data<DataType>>()
 
@@ -41,16 +31,11 @@ export function useList(
     }
   )
 
-  watch(
-    () => topics.value.length,
-    () => {
-      if (topics.value.length < total.value) observer.observe(lastItem.value)
-    }
-  )
-
-  onMounted(loadMore)
+  watchEffect(() => {
+    if (topics.value.length < total.value) observer.observe(lastItem.value)
+  })
 
   onUnmounted(() => observer.disconnect())
 
-  return { topics, lastItem, observer, loadMore }
+  return { topics, lastItem, observer, load }
 }

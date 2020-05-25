@@ -120,20 +120,19 @@ import { ref, computed, onMounted, onUnmounted, defineComponent } from 'vue'
 import { api } from '../utils/api'
 import { categorizeJobs, categorizeBrief } from '../utils/categorize'
 import { useList } from '../utils/list'
-import last from 'lodash-es/last'
+import {last} from 'lodash-es'
 import { BasicData, CategorizedData, UseList } from '../types/misc'
 import { spacing } from '../plugins/filters'
 
 export default defineComponent({
   setup() {
-    const brief = ref<CategorizedData<Brief>>({})
-    const lastCursor = computed(() =>
-      Date.parse(last(topics.value).publishDate)
-    )
-    const { topics, lastItem } = useList('jobs', lastCursor) as UseList<
-      Position
-    >
-    const jobs = computed(() => categorizeJobs(topics.value))
+    const rawBrief = ref<Brief[]>([])
+    const brief = computed(() => categorizeBrief(rawBrief.value))
+
+    onMounted(async () => {
+      const { data } = await api('jobs/brief').json<BasicData<Brief>>()
+      rawBrief.value = data
+    })
 
     const highlight = (brief: Brief) =>
       spacing(
@@ -142,18 +141,22 @@ export default defineComponent({
           .join(` <strong>${brief.jobTitle}</strong> `)
       )
 
+    const lastCursor = computed(() =>
+      Date.parse(last(topics.value).publishDate)
+    )
+    const { topics, lastItem, load } = useList('jobs', lastCursor) as UseList<
+      Position
+    >
+    const jobs = computed(() => categorizeJobs(topics.value))
+
+    onMounted(load)
+
     const expand = (e: MouseEvent) => {
       const target = (e.target as Element).closest('.expandable')
       if (target) target.classList.toggle('expand')
     }
 
-    onMounted(async () => {
-      const { data } = await api('jobs/brief').json<BasicData<Brief>>()
-      brief.value = categorizeBrief(data)
-
-      document.addEventListener('click', expand)
-    })
-
+    onMounted(() => document.addEventListener('click', expand))
     onUnmounted(() => document.removeEventListener('click', expand))
 
     return { brief, jobs, lastItem, highlight, spacing }

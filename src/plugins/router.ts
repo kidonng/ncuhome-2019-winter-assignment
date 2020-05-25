@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// TODO: import { ga } from 'vue-router-ga-lite'
+import { ga } from 'vue-router-ga-lite'
 
 const News = () => import('../views/News.vue')
 export const router = createRouter({
@@ -54,4 +54,4 @@ router.afterEach(({ meta }) => {
   if (meta) document.title = `Readhub - ${meta.title}`
 })
 
-// TODO: ga('UA-140053908-2', router)
+ga('UA-140053908-2', router)
