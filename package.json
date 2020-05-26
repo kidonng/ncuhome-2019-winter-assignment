@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "now-dev": "yarn dev --port $PORT"
   },
   "dependencies": {
     "ky": "^0.20.0",

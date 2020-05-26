@@ -8,6 +8,6 @@ Minimal [Readhub](https://readhub.cn/) copy.
 
 ## Development
 
-- Install dependencies `yarn` & `yarn global add netlify-cli`
-- Run `netlify dev`
+- Install dependencies `yarn` & `yarn global add vercel`
+- Run `vc dev`
 - Build `yarn build`
