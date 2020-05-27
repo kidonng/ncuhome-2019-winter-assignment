@@ -110,7 +110,7 @@ strong
 
 .summary
   color #666
-  line-height rem(28)
+  line-height em(28)
   word-break break-word
 
 #nprogress
