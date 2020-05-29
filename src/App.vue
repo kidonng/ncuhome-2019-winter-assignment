@@ -27,7 +27,7 @@ export default {
   setup() {
     const categories = router
       .getRoutes()
-      .filter(({ name, meta }) => name !== 'topic' && meta)
+      .filter(({ meta }) => meta.nav)
       .map(({ name, meta: { title } }) => ({ name, title }))
 
     return { categories }
@@ -48,19 +48,14 @@ body
       width 50vw
 
 nav
-h1
   font-size xxl
+
+h1
+  font-size m
 
 nav
   display flex
   justify-content space-between
-
-  @media (min-width: 768px)
-    &
-      justify-content normal
-
-      a:not(:only-child)
-        margin-left m * 2
 
 h1
   margin 0

@@ -9,7 +9,7 @@ export const router = createRouter({
     {
       name: 'topics',
       path: '/topics',
-      meta: { title: '热门' },
+      meta: { title: '热门', nav: true },
       component: () => import('../views/Topics.vue'),
     },
     {
@@ -21,25 +21,25 @@ export const router = createRouter({
     {
       name: 'news',
       path: '/news',
-      meta: { title: '科技' },
+      meta: { title: '科技', nav: true },
       component: News,
     },
     {
       name: 'technews',
       path: '/tech',
-      meta: { title: '开发' },
+      meta: { title: '开发', nav: true },
       component: News,
     },
     {
       name: 'blockchain',
       path: '/blockchain',
-      meta: { title: '区块' },
+      meta: { title: '区块', nav: true },
       component: News,
     },
     {
       name: 'jobs',
       path: '/jobs',
-      meta: { title: '招聘' },
+      meta: { title: '招聘', nav: true },
       component: () => import('../views/Jobs.vue'),
     },
     {
