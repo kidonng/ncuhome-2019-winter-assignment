@@ -7,7 +7,7 @@
     "now-dev": "yarn dev --port $PORT"
   },
   "dependencies": {
-    "ky": "0.20.0",
+    "ky": "0.23.0",
     "lodash-es": "4.17.15",
     "nprogress": "1.0.0-1",
     "vue": "3.0.0-beta.14",

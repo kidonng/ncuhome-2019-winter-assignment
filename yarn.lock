@@ -1653,10 +1653,10 @@ koa@^2.11.0:
     type-is "^1.6.16"
     vary "^1.1.2"
 
-ky@0.20.0:
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/ky/-/ky-0.20.0.tgz#4cebcd208f2d0d0b5970a63523afecfd79bd9e46"
-  integrity sha512-JAfwtwj+t7WqRus88PfBj25aAjRQUgMhk7aB2ufjQ6v8faoNwMy02mfSQ0iNXWCbJGcSl2JZ5ckaiywRjbq0Uw==
+ky@0.23.0:
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-0.23.0.tgz#54c2f3fa9003d591cb2f368384e6c84795a92e64"
+  integrity sha512-+t2CbQsLmpN3HeYPBxN+VbZqBOd86njF3cvnueC77pJKVHRjiMI0Ac+pfkB8e17Bw1dGHbMk9hrHst9Bw7ndgw==
 
 loader-utils@^1.1.0:
   version "1.4.0"
