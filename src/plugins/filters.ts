@@ -1,5 +1,4 @@
-// Pending https://github.com/vinta/pangu.js/issues/160
-import pangu from 'https://cdn.pika.dev/pangu@4.0.7'
+import pangu from 'pangu'
 
 export const spacing = (text: string) => pangu.spacing(text)
 

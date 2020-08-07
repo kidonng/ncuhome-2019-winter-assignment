@@ -9,6 +9,10 @@
       "handle": "filesystem"
     },
     {
+      "src": "/(src|vite|@modules)/(.*)",
+      "dest": "/$1/$2"
+    },
+    {
       "src": "^.*",
       "dest": "/index.html"
     }

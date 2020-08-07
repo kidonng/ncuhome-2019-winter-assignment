@@ -32,7 +32,7 @@ export function useList(
   )
 
   watchEffect(() => {
-    if (topics.value.length < total.value) observer.observe(lastItem.value)
+    if (topics.value.length < total.value) observer.observe(lastItem.value!)
   })
 
   onUnmounted(() => observer.disconnect())

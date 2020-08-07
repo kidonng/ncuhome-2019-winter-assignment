@@ -3,25 +3,26 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "now-dev": "yarn dev --port $PORT"
+    "build": "vite build"
   },
   "dependencies": {
-    "ky": "0.20.0",
-    "lodash-es": "4.17.15",
-    "nprogress": "1.0.0-1",
-    "vue": "3.0.0-beta.14",
-    "vue-router": "4.0.0-alpha.12",
-    "vue-router-ga-lite": "0.3.0"
+    "ky": "^0.23.0",
+    "lodash-es": "^4.17.15",
+    "nprogress": "^1.0.0-1",
+    "pangu": "^4.0.7",
+    "vue": "^3.0.0-rc.5",
+    "vue-router": "^4.0.0-beta.6",
+    "vue-router-ga-lite": "^0.3.0"
   },
   "devDependencies": {
-    "@types/lodash-es": "4.17.3",
-    "@types/nprogress": "0.2.0",
-    "@types/pangu": "3.3.0",
-    "@vue/compiler-sfc": "3.0.0-beta.14",
-    "prettier": "2.0.5",
-    "stylus": "0.54.7",
-    "vite": "0.18.0"
+    "@sindresorhus/tsconfig": "^0.7.0",
+    "@types/lodash-es": "^4.17.3",
+    "@types/nprogress": "^0.2.0",
+    "@types/pangu": "^3.3.0",
+    "@vue/compiler-sfc": "^3.0.0-rc.5",
+    "prettier": "^2.0.5",
+    "stylus": "^0.54.7",
+    "vite": "^1.0.0-rc.4"
   },
   "prettier": {
     "semi": false,
@@ -29,7 +30,8 @@
   },
   "renovate": {
     "extends": [
-      ":base"
+      "config:base",
+      ":preserveSemverRanges"
     ]
   }
 }

@@ -43,11 +43,11 @@ export const router = createRouter({
       component: () => import('../views/Jobs.vue'),
     },
     {
-      path: '/',
+      path: '/:catchAll(.*)',
       redirect: 'topics',
     },
   ],
-  scrollBehavior: () => ({ x: 0, y: 0 }),
+  scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 
 router.afterEach(({ meta }) => {
