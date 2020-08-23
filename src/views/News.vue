@@ -36,37 +36,30 @@
   </div>
 </template>
 
-<script lang="ts">
-import { watchEffect, defineComponent, computed, ComputedRef } from 'vue'
+<script setup lang="ts">
+import { watchEffect, computed, ComputedRef } from 'vue'
 import { api } from '../utils/api'
 import { useList } from '../utils/list'
-import {last} from 'lodash-es'
+import { last } from 'lodash-es'
 import { Data, UseList } from '../types/misc'
 import { router } from '../plugins/router'
-import { spacing, format } from '../plugins/filters'
 
-export default defineComponent({
-  name: 'News',
-  setup() {
-    const route = computed(() => router.currentRoute.value.name) as ComputedRef<
-      string
-    >
-    const lastCursor = computed(() =>
-      Date.parse(last(topics.value).publishDate)
-    )
-    const { topics, lastItem, observer, load } = useList(
-      route,
-      lastCursor
-    ) as UseList<News>
+const route = computed(() => router.currentRoute.value.name) as ComputedRef<
+  string
+>
+const lastCursor = computed(() => Date.parse(last(topics.value).publishDate))
+const { topics, lastItem, observer, load } = useList(
+  route,
+  lastCursor
+) as UseList<News>
 
-    watchEffect(async () => {
-      observer.disconnect()
-      load()
-    })
-
-    return { topics, lastItem, spacing, format }
-  },
+watchEffect(async () => {
+  observer.disconnect()
+  load()
 })
+
+export { topics, lastItem }
+export { spacing, format } from '../plugins/filters'
 </script>
 
 <style lang="stylus" scoped>

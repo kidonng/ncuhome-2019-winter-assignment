@@ -115,53 +115,47 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ref, computed, onMounted, onUnmounted, defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { api } from '../utils/api'
 import { categorizeJobs, categorizeBrief } from '../utils/categorize'
 import { useList } from '../utils/list'
-import {last} from 'lodash-es'
+import { last } from 'lodash-es'
 import { BasicData, CategorizedData, UseList } from '../types/misc'
 import { spacing } from '../plugins/filters'
 
-export default defineComponent({
-  setup() {
-    const rawBrief = ref<Brief[]>([])
-    const brief = computed(() => categorizeBrief(rawBrief.value))
+const rawBrief = ref<Brief[]>([])
+export const brief = computed(() => categorizeBrief(rawBrief.value))
 
-    onMounted(async () => {
-      const { data } = await api('jobs/brief').json<BasicData<Brief>>()
-      rawBrief.value = data
-    })
-
-    const highlight = (brief: Brief) =>
-      spacing(
-        brief.content
-          .split(brief.jobTitle)
-          .join(` <strong>${brief.jobTitle}</strong> `)
-      )
-
-    const lastCursor = computed(() =>
-      Date.parse(last(topics.value).publishDate)
-    )
-    const { topics, lastItem, load } = useList('jobs', lastCursor) as UseList<
-      Position
-    >
-    const jobs = computed(() => categorizeJobs(topics.value))
-
-    onMounted(load)
-
-    const expand = (e: MouseEvent) => {
-      const target = (e.target as Element).closest('.expandable')
-      if (target) target.classList.toggle('expand')
-    }
-
-    onMounted(() => document.addEventListener('click', expand))
-    onUnmounted(() => document.removeEventListener('click', expand))
-
-    return { brief, jobs, lastItem, highlight, spacing }
-  },
+onMounted(async () => {
+  const { data } = await api('jobs/brief').json<BasicData<Brief>>()
+  rawBrief.value = data
 })
+
+export const highlight = (brief: Brief) =>
+  spacing(
+    brief.content
+      .split(brief.jobTitle)
+      .join(` <strong>${brief.jobTitle}</strong> `)
+  )
+
+const lastCursor = computed(() => Date.parse(last(topics.value).publishDate))
+const { topics, lastItem, load } = useList('jobs', lastCursor) as UseList<
+  Position
+>
+export const jobs = computed(() => categorizeJobs(topics.value))
+
+onMounted(load)
+
+const expand = (e: MouseEvent) => {
+  const target = (e.target as Element).closest('.expandable')
+  if (target) target.classList.toggle('expand')
+}
+
+onMounted(() => document.addEventListener('click', expand))
+onUnmounted(() => document.removeEventListener('click', expand))
+
+export { lastItem, spacing }
 </script>
 
 <style lang="stylus" scoped>

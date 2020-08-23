@@ -34,33 +34,27 @@
   </article>
 </template>
 
-<script lang="ts">
-import { ref, computed, watchEffect, defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, computed, watchEffect } from 'vue'
 import { api } from '../utils/api'
 import { router } from '../plugins/router'
-import { spacing, format } from '../plugins/filters'
+import { spacing } from '../plugins/filters'
 
-export default defineComponent({
-  name: 'Topic',
-  setup() {
-    const topic = ref<FullTopic>()
+export const topic = ref<FullTopic>()
 
-    watchEffect(async () => {
-      const route = computed(
-        () => `topic/${router.currentRoute.value.params.id}`
-      )
-      const { timeline, ...data } = await api(route.value).json<FullTopic>()
+watchEffect(async () => {
+  const route = computed(() => `topic/${router.currentRoute.value.params.id}`)
+  const { timeline, ...data } = await api(route.value).json<FullTopic>()
 
-      // Remove current topic
-      if (timeline?.topics) timeline.topics.shift()
-      topic.value = { timeline, ...data }
+  // Remove current topic
+  if (timeline?.topics) timeline.topics.shift()
+  topic.value = { timeline, ...data }
 
-      document.title = `${spacing(data.title)} - Readhub`
-    })
-
-    return { topic, spacing, format }
-  },
+  document.title = `${spacing(data.title)} - Readhub`
 })
+
+export { spacing }
+export { format } from '../plugins/filters'
 </script>
 
 <style lang="stylus" scoped>

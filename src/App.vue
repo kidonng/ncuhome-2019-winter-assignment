@@ -19,20 +19,13 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { router } from './plugins/router'
 
-export default {
-  name: 'App',
-  setup() {
-    const categories = router
-      .getRoutes()
-      .filter(({ meta }) => meta.nav)
-      .map(({ name, meta: { title } }) => ({ name, title }))
-
-    return { categories }
-  },
-}
+export const categories = router
+  .getRoutes()
+  .filter(({ meta }) => meta.nav)
+  .map(({ name, meta: { title } }) => ({ name, title }))
 </script>
 
 <style lang="stylus">

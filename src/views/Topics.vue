@@ -24,44 +24,39 @@
   </div>
 </template>
 
-<script lang="ts">
-import { onMounted, onUnmounted, defineComponent, computed } from 'vue'
+<script setup lang="ts">
+import { onMounted, onUnmounted, computed } from 'vue'
 import { api } from '../utils/api'
 import { useList } from '../utils/list'
 import { last } from 'lodash-es'
-import { spacing, format } from '../plugins/filters'
 import { Data, UseList } from '../types/misc'
 
-export default defineComponent({
-  name: 'Topics',
-  setup() {
-    const lastCursor = computed(() => last(topics.value).order)
-    const { topics, lastItem, load } = useList('topic', lastCursor) as UseList<
-      Topic
-    >
+const lastCursor = computed(() => last(topics.value).order)
+const { topics, lastItem, load } = useList('topic', lastCursor) as UseList<
+  Topic
+>
 
-    onMounted(load)
+onMounted(load)
 
-    // Refresh topics
-    const refresh = setInterval(async () => {
-      const { count } = await api('topic/newCount', {
-        searchParams: { latestCursor: topics.value[0].order },
-      }).json<NewTopicCount>()
+// Refresh topics
+const refresh = setInterval(async () => {
+  const { count } = await api('topic/newCount', {
+    searchParams: { latestCursor: topics.value[0].order },
+  }).json<NewTopicCount>()
 
-      if (count) {
-        const { data } = await api('topic', {
-          searchParams: { pageSize: count },
-        }).json<Data<Topic>>()
+  if (count) {
+    const { data } = await api('topic', {
+      searchParams: { pageSize: count },
+    }).json<Data<Topic>>()
 
-        topics.value = [...data, ...topics.value]
-      }
-    }, 30 * 1000)
+    topics.value = [...data, ...topics.value]
+  }
+}, 30 * 1000)
 
-    onUnmounted(() => clearInterval(refresh))
+onUnmounted(() => clearInterval(refresh))
 
-    return { topics, lastItem, spacing, format }
-  },
-})
+export { topics, lastItem }
+export { spacing, format } from '../plugins/filters'
 </script>
 
 <style lang="stylus" scoped>
