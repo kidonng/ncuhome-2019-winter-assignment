@@ -12,6 +12,7 @@ Minimal [Readhub](https://readhub.cn/) copy, where I make experiments.
 - [Introduce Vue Composition API](https://github.com/kidonng/readhub/commit/ebe012a83903f19434d7f429ef1328549d68a63a)
 - [Convert to TypeScript](https://github.com/kidonng/readhub/commit/2f2e8d388ee268c7740e5a8cf8349a21669cec52)
 - [Vue 3 + Vite](https://github.com/kidonng/readhub/commit/3c82ab6a2deddb758f54210b975fa8f4b3754e6e)
+- [Yarn 2](https://github.com/kidonng/readhub/commit/b76d3353c0aa7ea6c942e32b3578672de4e10343) ([ZipFS extension issue](https://github.com/yarnpkg/berry/issues/1758))
 
 ## Development
 
