@@ -2139,10 +2139,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"ky@npm:^0.23.0":
-  version: 0.23.0
-  resolution: "ky@npm:0.23.0"
-  checksum: d86960b91a5a793c29631bc3b12403c60b99a1cc92fae154bd2dc10df110e0e6c4b637108f1649987e60a3f3c0ce9e6478bb7f6bac663f0963b728b913db7af3
+"ky@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "ky@npm:0.26.0"
+  checksum: a1f5c6ead93f33d3e96be5f2c98e07b17b927546267bd36205e84795eb4f079b4dc3bf2beb2ccc072b0badc68c2678d0a54c5a99a4b551a38c99135dc9254705
   languageName: node
   linkType: hard
 
@@ -2849,7 +2849,7 @@ fsevents@~2.1.2:
     "@types/nprogress": ^0.2.0
     "@types/pangu": ^3.3.0
     "@vue/compiler-sfc": ^3.0.0-rc.5
-    ky: ^0.23.0
+    ky: ^0.26.0
     lodash-es: ^4.17.15
     nprogress: ^1.0.0-1
     pangu: ^4.0.7
