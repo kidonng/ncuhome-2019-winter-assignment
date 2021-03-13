@@ -166,10 +166,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sindresorhus/tsconfig@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "@sindresorhus/tsconfig@npm:0.7.0"
-  checksum: e0092defcf2b240ee7c84684e59f7e9b380d8a4fd47a0361721d2a67d9e816db762cb663ef42900b1925580823f173dcef291a60c148d33440c5fcd49b4f71d4
+"@sindresorhus/tsconfig@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "@sindresorhus/tsconfig@npm:0.9.0"
+  checksum: 07e516e712aef328f01226118f3e4953f86d631e5f263b3398852b185dac1d3991943fccda00de7122ef2de52d1c18a1c2bf7327860b101999f20505e1c7a4fb
   languageName: node
   linkType: hard
 
@@ -2844,7 +2844,7 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "readhub@workspace:."
   dependencies:
-    "@sindresorhus/tsconfig": ^0.7.0
+    "@sindresorhus/tsconfig": ^0.9.0
     "@types/lodash-es": ^4.17.3
     "@types/nprogress": ^0.2.0
     "@types/pangu": ^3.3.0
